@@ -1,133 +1,97 @@
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
-<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <title>AcadeMe TAU</title>
-        <meta name="description" content="">
-        <meta name="HandheldFriendly" content="True">
-        <meta name="MobileOptimized" content="320">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-        <meta http-equiv="cleartype" content="on">
-
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
-        <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
-
-        <!-- Tile icon for Win8 (144x144 + tile color) -->
-        <meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
-        <meta name="msapplication-TileColor" content="#222222">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--><html class="no-js"><!--<![endif]-->
+<head>	
+	<title>AcadeMe TAU</title>
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta http-equiv="cleartype" content="on">
+	
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
+	<link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
+	
+	<!-- Tile icon for Win8 (144x144 + tile color) -->
+	<meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
+	<meta name="msapplication-TileColor" content="#222222">
 		
-
-        <!-- For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
-        <!--
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="">
-        -->
-
-        <!-- This script prevents links from opening in Mobile Safari. https://gist.github.com/1042026 -->
-        <!--
-        <script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
-        -->
-
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
-        <link rel="stylesheet" href="css/ver2.min.css">
-        <link rel="stylesheet" href="css/app.css">
-        <link rel='stylesheet' media='screen and (min-width: 300px) and (max-width: 700px)' href="css/app600.css" />
-        <link rel='stylesheet' media='screen and (min-width: 700px)' href="css/apptab.css" />
-        <script>
-        	var href_url = 'https://secure.wanted.co.il/poll.tau.wanted.co.il/';
-        	function onLoad(){
-        		var data = {action : 'display_questions_for_class'};
-				var json_param = 'jsn=' + JSON.stringify(data);
-			    var req = new XMLHttpRequest();   // new HttpRequest instance 
-				req.open("POST", href_url, false);
-				req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-				req.onreadystatechange = function() {
-				  if (req.readyState == 4) {  	
-				    if (req.status == 200 || req.status == 0) {
-				      var data = JSON.parse(req.responseText);
-				      if( data.success) {
-				      	alert('OK!');
-				   	  }
-				    }
-				  }
-				};
-				req.send(json_param);
-        	}
-		</script>
-    </head>
-    <body style="visibility: hidden;" onload="onLoad()">
-    	
-    	<div data-role="page" id="Login_Page">
-    		<div data-role="content" id="splash">
-    			<img class="splash_img" src="images/splash_screen.png" />
-    			<h2>AcadeMe TAU</h2>
-    		</div>
-			<div data-role="content" style="display: none;" id="login_page">	
-				<!--<p><a href="#" onclick="showAlert(); return false;">Show Alert</a></p>-->
-				<form data-ajax="false" method="post" name="login" id="login_form">    
-					<input type="hidden" value="my-account/posts/?type=job-seeker&cat=student" name="referrer">
-					<div class="login_container">
-						<div class="login_label">דוא"ל</div>
-						<input required class="pretty" id="login_email" type="text" value="" style="" name="login_email">	
-					</div>
-					<div class="login_container">
-						<div class="login_label">סיסמה</div>
-						<input required class="pretty" id="login_password" type="password" value="" name="login_password">
-					</div>
-					<!--
-					<div class="login_container">
-						<div class="login_label"><?=$strings['id_number']?></div>
-						<div><input required onblur="check_id(this)" class="field" type="text"  name="id_number" maxlength="10" value=""/></div>
-					</div>
-					-->
-					<div class="separator">&nbsp;</div>
-					<div class="submit_container">
-						<input type="submit" value="התחבר" class="login_enter">
-					</div>
-				</form>
-				<!--
-				<video id="audio_player" width="0" height="0">
-				    <source src="sounds/effectsSprite1.mp3">
-				</video >
-				-->
-				<div class="error" id="login_error">הפרטים אינם נכונים, אנא נסו שנית</div>
-			</div><!-- /content -->
-		</div><!-- /page -->
-		<!--App-->
-		
-    	
-        <!-- Add your site or application content here -->
-        <!--<script src="js/zepto.min.js"></script>-->
-		<script src="js/jquery-2.0.2.min.js"></script>
-		
-        <!--<script src="js/helper.js"></script>-->
-        
-        <script src="js/jquery.validate.min.js"></script>
-        <script src="js/messages_he.js"></script>
-        <!--<script type="text/javascript" src="js/jquery.mb.audio.js"></script>-->
-        <script src="js/main.js?version=1.1"></script>
-			<script src="js/iscroll.js"></script>
-			<link rel="stylesheet" href="css/chat.css">
-		<!--<script src="js/custom-init.js"></script>-->
-        <script src="js/jquery.mobile-1.4.1.min.js"></script>
-        <script src="js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="js/jquery.ui.touch-punch.min.js"></script>
-        
-        <div data-role="dialog" id="sure" data-title="האם להמשיך בפעולה?">
-		  <div data-role="content">
-		    <h3 class="sure-1">???</h3>
-		    <a href="#" class="sure-do" data-role="button" data-theme="b" data-rel="back">כן</a>
-		    <a href="#" data-role="button" data-theme="c" data-rel="back">לא</a>
-		  </div>
+	<!-- For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
+	<!--
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="">
+	-->
+	
+	<!-- This script prevents links from opening in Mobile Safari. https://gist.github.com/1042026 -->
+	<!--
+	<script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
+	-->
+	
+	<link rel="stylesheet" href="css/tau_app_version1.min.css" />
+	<link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />	
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+	
+	<!--script>
+	var href_url = 'https://secure.wanted.co.il/poll.tau.wanted.co.il/';
+	function onLoad(){
+		var data = {action : 'display_questions_for_class'};
+	var json_param = 'jsn=' + JSON.stringify(data);
+	var req = new XMLHttpRequest();   // new HttpRequest instance 
+	req.open("POST", href_url, false);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	req.onreadystatechange = function() {
+	  if (req.readyState == 4) {  	
+	    if (req.status == 200 || req.status == 0) {
+	      var data = JSON.parse(req.responseText);
+	      if( data.success) {
+	      	alert('OK!');
+		   	  }
+		    }
+		  }
+		};
+		req.send(json_param);
+	}
+	</script-->
+</head>
+<body>
+	<div data-role="page" id="Login_Page">
+		<div data-role="content" id="splash">
+			<img class="splash_img" src="images/splash_screen.png" />
+			<h2>AcadeMe TAU</h2>
 		</div>
-		
-    </body>
+		<div data-role="content" style="display: none;" id="login_page">	
+			<form data-ajax="false" method="post" name="login" id="login_form">    
+				<input type="hidden" value="my-account/posts/?type=job-seeker&cat=student" name="referrer">
+				<div class="login_container">
+					<div class="login_label">דוא"ל</div>
+					<input required class="pretty" id="login_email" type="text" value="" style="" name="login_email" />	
+				</div>
+				<div class="login_container">
+					<div class="login_label">סיסמה</div>
+					<input required class="pretty" id="login_password" type="password" value="" name="login_password" />
+				</div>				
+				<div class="separator">&nbsp;</div>
+				<div class="submit_container">
+					<input type="submit" value="התחבר" class="login_enter" />
+				</div>
+			</form>
+			<div class="error" id="login_error">הפרטים אינם נכונים, אנא נסו שנית</div>
+		</div>
+	</div>
+	
+	<script src="js/jquery-2.0.2.min.js"></script>
+	<script src="js/jquery.validate.min.js"></script>
+	<script src="js/messages_he.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/iscroll.js"></script>
+	<script src="js/jquery.mobile-1.4.1.min.js"></script>
+	<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+	<script src="js/jquery.ui.touch-punch.min.js"></script>
+</body>
 </html>

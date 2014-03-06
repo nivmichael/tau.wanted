@@ -1,1 +1,0 @@
-plash_screen.png
