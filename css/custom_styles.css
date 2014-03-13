@@ -1,0 +1,81 @@
+input {
+	text-align: right !important;
+}
+
+.error {
+	color: red;
+	text-align: center;
+	visibility: hidden;
+}
+
+.login_label {
+	position: absolute;
+	color: gray;
+	top: 25%;
+	right: 6px;
+}
+
+.login_container, .register_container {
+	position: relative;
+}
+
+.login_container div {
+	margin: 0;
+}
+
+.header_normal {
+	text-align: center;
+}
+
+.job_result {
+	margin-bottom: 10px;
+	border-width: 1px;
+	border-radius:5px;
+}
+
+.job_result .match_percentage {
+	height:15px;
+	width:70px;
+}
+
+.incomplete {
+	text-align:center;
+	color:red;
+	font-size:0.7em;
+	display:none;
+}
+
+.jobs_header {
+	text-align:center;
+	margin-top:0;
+}
+
+#date_of_birth .ui-controlgroup-controls {
+    width: 100%;
+}
+
+#date_of_birth .ui-controlgroup-controls .ui-select {
+    min-width: 33.33%;
+}
+
+.img_match_0{  background:url('images/stars_halfs.png') 0 0px no-repeat;}
+.img_match_5{  background:url('images/stars_halfs.png') 0 -15px no-repeat;}
+.img_match_10{  background:url('images/stars_halfs.png') 0 -15px no-repeat;}
+.img_match_15{ background:url('images/stars_halfs.png') 0 -32px no-repeat;}
+.img_match_20{ background:url('images/stars_halfs.png') 0 -32px no-repeat;}
+.img_match_25{ background:url('images/stars_halfs.png') 0 -48px no-repeat;}
+.img_match_30{ background:url('images/stars_halfs.png') 0 -48px no-repeat;}
+.img_match_35{ background:url('images/stars_halfs.png') 0 -65px no-repeat;}
+.img_match_40{ background:url('images/stars_halfs.png') 0 -65px no-repeat;}
+.img_match_45{ background:url('images/stars_halfs.png') 0 -81px no-repeat;}
+.img_match_50{ background:url('images/stars_halfs.png') 0 -81px no-repeat;}
+.img_match_55{ background:url('images/stars_halfs.png') 0 -96px no-repeat;}
+.img_match_60{ background:url('images/stars_halfs.png') 0 -96px no-repeat;}
+.img_match_65{ background:url('images/stars_halfs.png') 0 -112px no-repeat;}
+.img_match_70{ background:url('images/stars_halfs.png') 0 -112px no-repeat;}
+.img_match_75{ background:url('images/stars_halfs.png') 0 -128px no-repeat;}
+.img_match_80{ background:url('images/stars_halfs.png') 0 -128px no-repeat;}
+.img_match_85{ background:url('images/stars_halfs.png') 0 -143px no-repeat;}
+.img_match_90{ background:url('images/stars_halfs.png') 0 -143px no-repeat;}
+.img_match_95{ background:url('images/stars_halfs.png') 0 -158px no-repeat;}
+.img_match_100{background:url('images/stars_halfs.png') 0 -158px no-repeat;}
