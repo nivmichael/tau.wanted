@@ -53,6 +53,10 @@ $('#jobs_feed').on("pagecreate", function() {
 
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
+	get_employment_categories();
+});
+
+$('#profile_page').on("pagebeforeshow", function() {
 	if(!localStorage.logged_in) {
 		$(this).children().hide();
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
@@ -60,64 +64,65 @@ $('#profile_page').on("pagebeforecreate", function() {
 	} else if(user_id == null) {
 		$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 	} else {
-		//get_user();
+		get_user();
+		var field_name = '';
+		var form_fields = $('#profile_form').serializeArray();
+		//console.log(form_fields)		
+		details['self_eval_'] = JSON.parse(details['self_eval_']);
+		for (field in details['self_eval_']) {
+			details['self_eval_' + field] = details['self_eval_'][field];
+		}
+		//console.log(details);
+		$.each(form_fields, function(i, field){
+			$this = $('#' + field.name);
+			field_name = field.name;
+			$this.val(details[field_name]);
+			if($this.is("select")) {
+				if(details[field_name] == '' || details[field_name] == null || !details[field_name]) {
+					document.getElementById(field.name).selectedIndex = 0;
+				}
+				$this.prev('span').html($('#' + field_name + '>option:selected').text());
+			} else if($this.hasClass("checkbox_array")) {
+				var checkbox_array = $this.val();
+				checkbox_array = JSON.parse(checkbox_array);
+				for (var i in checkbox_array) {
+			    	$(':checkbox[name=' + i + ']').click();
+			    }
+			} else if($this.hasClass("slider")) {
+				$this.val(-$this.val());
+				$this.next('div').children('a').css('left', parseInt(-details[field_name]) + '%');
+			} else {			
+				if($this.val() != '') {
+					$this.parent().prev('div').hide();
+				}			
+			}		
+	    });
+	    
+	    // Setting the jobs placeholders to 'disabled' after details were loaded,
+	    // Otherwise Chrome doesn't recognize these fields
+	    $('#employment_0_category option').first().attr('disabled', "true");
+		$('#next_step_category option').first().attr('disabled', "true");
 	}
 });
 
-$('#profile_page').on("pageshow", function() {
-	get_user();
-	var field_name = '';
-	var form_fields = $('#profile_form').serializeArray();
-	//console.log(form_fields)
-	get_employment_categories();
-	details['self_eval_'] = JSON.parse(details['self_eval_']);
-	for (field in details['self_eval_']) {
-		details['self_eval_' + field] = details['self_eval_'][field];
-	}
-	//console.log(details);
-	$.each(form_fields, function(i, field){
-		$this = $('#' + field.name);
-		field_name = field.name;
-		$this.val(details[field_name]);
-		if($this.is("select")) {
-			if(details[field_name] == '' || details[field_name] == null || !details[field_name]) {
-				document.getElementById(field.name).selectedIndex = 0;
+/*
+$(document).ready(function(){
+	$('.ui-slider-handle').on("click", function(){
+		alert(124)
+		var total_eval = 0;	
+		$('.slider').each(function(){
+			total_eval += parseInt($(this).val());
+			if(total_eval > 390) {
+				alert(123)		
 			}
-			$this.prev('span').html($('#' + field_name + '>option:selected').text());
-		} else if($this.is("checkbox")) {
-			
-		} else if($this.hasClass("slider")) {
-			$this.val(-$this.val());
-			$this.next('div').children('a').css('left', parseInt(-details[field_name]) + '%');
-		} else {			
-			if($this.val() != '') {
-				$this.parent().prev('div').hide();
-			}			
-		}		
-    });
-    
-    var education_0_faculty = document.getElementById('education_0_faculty').value;
-    education_0_faculty = JSON.parse(education_0_faculty);
-    for (var i in education_0_faculty) {
-    	$(':checkbox[name=' + i + ']').click();
-    }
+		});		
+	});
 });
+*/
 
-$('.slider').on("slidestart", function(){
-	var total_eval = 0;
-	$(this).each(function(){
-		total_eval += $(this).val();
-	})
-	alert(total_eval)
-	if(total_eval > 390) {
-		alert("חרגת ממספר הנקודות האפשרי.");
-	}
-})
-
-$('#add_education').click(function(e){
+$('.add_container').click(function(e){
 	e.preventDefault();
-	$(this).before($(this).prev('div').clone());
-	
+	$(this).before($(this).prev('div').clone());	
 })
 
 // Misc.
@@ -163,17 +168,17 @@ $('input').blur(function(){
 /***************************************************/
 /******************** Functions ********************/
 /***************************************************/
-function get_employment_categories(id) {
+function get_employment_categories() {
 	var action = 'get_employment_categories';
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, true);
+	req.open("POST", href_url, false);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
 				var data = JSON.parse(req.responseText);
-				$('#employment_0_category').append(data.success);
-				$('#next_step_category').append(data.success);				
+				$('#employment_0_category').append(data.success);				
+				$('#next_step_category').append(data.success);
 			}
 		}
 	};	
@@ -325,6 +330,15 @@ function get_user() {
 				loading('hide');
 				if(data.success) {
 					details = data.details;
+					// Cloning iterated data like education, etc...
+					for (var x in details) {						
+						if (details[x]['iteration']) {
+							var count = details[x]['iteration'];
+							for(var i = 0; i < count; i++) {
+								$('#' + x + " .add_container").click();
+							}
+						}
+					}
 				}
 				else {					
 					return false;

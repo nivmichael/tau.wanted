@@ -287,6 +287,7 @@
 					</select>
 					<fieldset id="profile_date_of_birth" data-type="horizontal" data-role="controlgroup">					
 						 <select name="general_birth_day" id="general_birth_day">
+						 	<option disabled="disabled">יום</option>
 				            <option value="1">01</option>
 				            <option value="2">02</option>
 				            <option value="3">03</option>
@@ -320,6 +321,7 @@
 				            <option value="31">31</option>
 				        </select>
 				        <select name="general_birth_month" id="general_birth_month">
+				        	<option disabled="disabled">חודש</option>
 				            <option value="1">01</option>
 				            <option value="2">02</option>
 				            <option value="3">03</option>
@@ -333,7 +335,8 @@
 				            <option value="11">11</option>
 				            <option value="12">12</option>
 				        </select>			        			   
-				        <select name="general_birth_year" id="general_birth_year">			            
+				        <select name="general_birth_year" id="general_birth_year">
+				        	<option disabled="disabled">שנה</option>			            
 							<option value="1999">1999</option>
 							<option value="1998">1998</option>
 							<option value="1997">1997</option>
@@ -406,9 +409,9 @@
 					</select>
 					<!--Cities goes here-->
 				</div>				
-				<div data-role="collapsible" id="education" data-collapsed="false">
+				<div data-role="collapsible" id="education">
 					<h3>השכלה</h3>
-					<div id="education_0_container">
+					<div id="education_0_container" class="iteration_container">
 					<fieldset data-role="controlgroup">
 					<select name="education_0_degree" id="education_0_degree">
 						<option disabled="disabled">תעודה/תואר</option>
@@ -482,7 +485,7 @@
 	                </select>
 	                </fieldset>
 					<fieldset data-role="controlgroup">
-						<input type="hidden" id="education_0_faculty" name="education_0_faculty" value="{}">
+						<input class="checkbox_array" type="hidden" id="education_0_faculty" name="education_0_faculty" value="{}">
 						<label>רפואה<input type="checkbox" id="רפואה" name="רפואה" ></label>
 						<label>מדעי החיים<input type="checkbox" id="מדעי_החיים" name="מדעי_החיים" ></label>
 						<label>מדעי הרוח<input type="checkbox" id="מדעי_הרוח" name="מדעי_הרוח" ></label>
@@ -683,10 +686,11 @@
 				        </select>		        
 				    </fieldset>
 				    </div>
-				    <button id="add_education">הוסף השכלה</button>
+				    <button class="add_container">הוספת השכלה</button>
 				</div>
-				<div data-role="collapsible">
+				<div data-role="collapsible" id="employment" data-collapsed="false">
 					<h3>ניסיון תעסוקתי</h3>
+					<div id="employment_0_container" class="iteration_container">
 					<fieldset class="small_date" id="employment_0_start_date" data-type="horizontal" data-role="controlgroup">						
 						<legend><b>תאריך תחילה</b></legend>				
 						 <select name="employment_0_start_month" id="employment_0_start_month">
@@ -872,7 +876,7 @@
 				        </select>		        
 				    </fieldset>		
 					<select name="employment_0_category" id="employment_0_category">
-						<option disabled="disabled">תחום ראשי</option>						
+						<option>תחום ראשי</option>						
 					</select>
 					<div class="profile_container">
 						<div class="login_label">שם החברה</div>
@@ -888,6 +892,8 @@
 						<div class="login_label">הערות</div>
 						<input id="employment_0_comments" type="text" name="employment_0_comments" />	
 					</div>
+					</div>
+					<button class="add_container">הוספת ניסיון</button>
 				</div>
 				<div data-role="collapsible" id="self_eval">
 					<h3>הערכה עצמית</h3>
@@ -903,7 +909,7 @@
 				<div data-role="collapsible">
 					<h3>צעד הבא</h3>
 					<select name="next_step_category" id="next_step_category">
-						<option disabled="disabled">תחום ראשי</option>						
+						<option>תחום ראשי</option>						
 					</select>
 					<select id="next_step_job_title" name="next_step_job_title">
 						<option disabled="disabled">דרג ניהולי</option> 
@@ -934,6 +940,7 @@
 					</select>
 					<fieldset id="next_step_availability_date" data-type="horizontal" data-role="controlgroup">					
 						 <select name="next_step_availability_day" id="next_step_availability_day">
+						 	<option disabled="disabled">יום</option>
 				            <option value="1">01</option>
 				            <option value="2">02</option>
 				            <option value="3">03</option>
@@ -967,6 +974,7 @@
 				            <option value="31">31</option>
 				        </select>
 				        <select name="next_step_availability_month" id="next_step_availability_month">
+				        	<option disabled="disabled">חודש</option>
 				            <option value="1">01</option>
 				            <option value="2">02</option>
 				            <option value="3">03</option>
@@ -981,6 +989,9 @@
 				            <option value="12">12</option>
 				        </select>			        			   
 				        <select name="next_step_availability_year" id="next_step_availability_year">
+				        	<option disabled="disabled">שנה</option>
+				        	<option value="2016">2016</option>
+				        	<option value="2016">2015</option>
 				        	<option value="2014">2014</option>
 							<option value="2013">2013</option>
 							<option value="2012">2012</option>

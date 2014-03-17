@@ -55,6 +55,10 @@ input {
 	margin-top:0;
 }
 
+.iteration_container {
+	border-bottom: 1px dashed gray;
+}
+
 #date_of_birth .ui-controlgroup-controls {
     width: 100%;
 }
