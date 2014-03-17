@@ -1,6 +1,8 @@
 ﻿var href_url = 'http://tau.wanted.co.il/rpc/controller.php';
 var user_id = null;
 var CheckFields = null;
+var max_eval_points = 390;
+var details = null;
 
 // Login Page
 $('#Login_Page').on("pagebeforecreate", function() {
@@ -25,6 +27,7 @@ $('#login_form').submit(function(e){
 $('#registration_form').submit(function(e){
 	e.preventDefault();
 	loading('show');
+	//alert($('#register_education_status').val())
 	if(validate_registration()) {
 		var $inputs = $('#registration_form :input');
 	    var values = {};
@@ -42,12 +45,83 @@ $('#jobs_feed').on("pagecreate", function() {
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
 		$('#Login_Page').children().show();
 	} else {
-		verify_user_logged_in(localStorage.logged_in);
+		if(user_id == null) {
+			verify_user_logged_in(localStorage.logged_in);
+		}
 	}
 });
 
+// Profile Page
+$('#profile_page').on("pagebeforecreate", function() {
+	if(!localStorage.logged_in) {
+		$(this).children().hide();
+		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
+		$('#Login_Page').children().show();
+	} else if(user_id == null) {
+		$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
+	} else {
+		//get_user();
+	}
+});
+
+$('#profile_page').on("pageshow", function() {
+	get_user();
+	var field_name = '';
+	var form_fields = $('#profile_form').serializeArray();
+	//console.log(form_fields)
+	get_employment_categories();
+	details['self_eval_'] = JSON.parse(details['self_eval_']);
+	for (field in details['self_eval_']) {
+		details['self_eval_' + field] = details['self_eval_'][field];
+	}
+	//console.log(details);
+	$.each(form_fields, function(i, field){
+		$this = $('#' + field.name);
+		field_name = field.name;
+		$this.val(details[field_name]);
+		if($this.is("select")) {
+			if(details[field_name] == '' || details[field_name] == null || !details[field_name]) {
+				document.getElementById(field.name).selectedIndex = 0;
+			}
+			$this.prev('span').html($('#' + field_name + '>option:selected').text());
+		} else if($this.is("checkbox")) {
+			
+		} else if($this.hasClass("slider")) {
+			$this.val(-$this.val());
+			$this.next('div').children('a').css('left', parseInt(-details[field_name]) + '%');
+		} else {			
+			if($this.val() != '') {
+				$this.parent().prev('div').hide();
+			}			
+		}		
+    });
+    
+    var education_0_faculty = document.getElementById('education_0_faculty').value;
+    education_0_faculty = JSON.parse(education_0_faculty);
+    for (var i in education_0_faculty) {
+    	$(':checkbox[name=' + i + ']').click();
+    }
+});
+
+$('.slider').on("slidestart", function(){
+	var total_eval = 0;
+	$(this).each(function(){
+		total_eval += $(this).val();
+	})
+	alert(total_eval)
+	if(total_eval > 390) {
+		alert("חרגת ממספר הנקודות האפשרי.");
+	}
+})
+
+$('#add_education').click(function(e){
+	e.preventDefault();
+	$(this).before($(this).prev('div').clone());
+	
+})
+
 // Misc.
-$('#logout').on('click', function(e) {
+$('.logout').on('click', function(e) {
 	$.mobile.loading( 'show');
 	$.mobile.changePage(
 	    window.location.href,
@@ -62,15 +136,21 @@ $('#logout').on('click', function(e) {
 	  setTimeout(function(){location.reload(1)},0);	  
 });
 
+$('.login_label').click(function(){
+	$(this).next().children('input').focus();
+});
+
 $('input').focus(function(){
 	$(this).parent().prev('div').hide();
 	var CheckFields = setInterval(function(){
-	$('input').not(this).each(function(){
-		if($(this).val() != '')
-		$(this).parent().prev('div').hide();
+	$('input').each(function(){
+		if($(this).val() != '') {
+			$(this).parent().prev('login_label').hide();
+		}
 	})
 	},0);
 });
+
 $('input').blur(function(){
 	if($(this).val() == '') {
 		$(this).parent().prev('div').show();
@@ -83,16 +163,34 @@ $('input').blur(function(){
 /***************************************************/
 /******************** Functions ********************/
 /***************************************************/
+function get_employment_categories(id) {
+	var action = 'get_employment_categories';
+	var req = new XMLHttpRequest(); 
+	req.open("POST", href_url, true);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.onreadystatechange = function() {
+		if (req.readyState == 4) {
+			if (req.status == 200 || req.status == 0) {
+				var data = JSON.parse(req.responseText);
+				$('#employment_0_category').append(data.success);
+				$('#next_step_category').append(data.success);				
+			}
+		}
+	};	
+	req.send("action=" + action);
+}
+
 function validate_registration() {
 	loading('hide');
 	var approved = true;
 	$('#registration_form :input').each(function(){
 		if ($(this).val() == '' || $(this).val() == null || $(this).val() == undefined) {
 			$('#error_alert_content').html('כל השדות הינם שדות חובה');
-			$('#lnkDialog').click();
-			return approved = false;
+			//$('#lnkDialog').click();
+			approved = false;
 		}
-	})
+	});
+	alert(approved);
 	return approved;
 }
 
@@ -106,7 +204,7 @@ function register_user(values) {
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
-				data = JSON.parse(req.responseText);
+				var data = JSON.parse(req.responseText);
 				if(data.success) {
 					user_id = data.user_id;					
 					first_name = values.register_first_name;
@@ -207,6 +305,31 @@ function get_jobs() {
 				}
 			}
 			loading('hide');
+		}
+	};	
+	req.send("action=" + action + "&parameters=" + json_param);
+}
+
+function get_user() {
+	loading('show');	
+	var action = 'get_user';
+	var parameters = {'user_id' : user_id};
+	var json_param = JSON.stringify(parameters);
+	var req = new XMLHttpRequest(); 
+	req.open("POST", href_url, false);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.onreadystatechange = function() {
+		if (req.readyState == 4) {
+			if (req.status == 200 || req.status == 0) {
+				data = JSON.parse(req.responseText);
+				loading('hide');
+				if(data.success) {
+					details = data.details;
+				}
+				else {					
+					return false;
+				}
+			}	
 		}
 	};	
 	req.send("action=" + action + "&parameters=" + json_param);

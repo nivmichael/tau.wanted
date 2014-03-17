@@ -1,3 +1,7 @@
+* {
+	direction:rtl !important;
+}
+
 input {
 	text-align: right !important;
 }
@@ -13,9 +17,10 @@ input {
 	color: gray;
 	top: 25%;
 	right: 6px;
+	cursor: text;
 }
 
-.login_container, .register_container {
+.login_container, .register_container, .profile_container {
 	position: relative;
 }
 
@@ -56,6 +61,30 @@ input {
 
 #date_of_birth .ui-controlgroup-controls .ui-select {
     min-width: 33.33%;
+}
+
+#next_step_availability_date .ui-controlgroup-controls {
+    width: 100%;
+}
+
+#next_step_availability_date .ui-controlgroup-controls .ui-select {
+    min-width: 33.33%;
+}
+
+#profile_date_of_birth .ui-controlgroup-controls {
+    width: 100%;
+}
+
+#profile_date_of_birth .ui-controlgroup-controls .ui-select {
+    width: 33.33%;
+}
+
+.small_date .ui-controlgroup-controls {
+    width: 100%;
+}
+
+.small_date .ui-controlgroup-controls .ui-select {
+    width: 50%;
 }
 
 .img_match_0{  background:url('images/stars_halfs.png') 0 0px no-repeat;}
