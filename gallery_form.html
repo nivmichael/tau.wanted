@@ -1,0 +1,21 @@
+<h3 style="text-align:center;font-family:Arial;direction:rtl">העלאת תמונות נוספות:</h3>
+<form style="text-align:center" action="http://tau.wanted.co.il/rpc/controller.php" autocomplete="off" data-ajax="false" enctype="multipart/form-data" method="post" name="gallery_upload_form" id="gallery_upload_form">
+	<input type="hidden" name="hash_verify" id="hash_verify" value="" />
+	<input multiple="multiple" type="file" name="files[]" id="files" /><br /><br />
+	<button onclick="Loading();" id="submit_profile">העלאת תמונות</button>
+</form>
+<script>
+	document.getElementById('hash_verify').value = localStorage.logged_in;
+	function Loading(e) {
+		document.getElementById('gallery_upload_form').parentElement.removeChild(document.getElementById('gallery_upload_form'));
+		document.body.innerHTML += '<div id="loading_text" style="text-align:center;direction:rtl;font-family: Arial; font-weight:bold">מעלה קבצים</div>';
+		setInterval(function(){
+			text = document.getElementById('loading_text').innerHTML;
+			if(text.length < 13) {
+				document.getElementById('loading_text').innerHTML += '.';
+			} else {
+				document.getElementById('loading_text').innerHTML = 'מעלה קבצים';
+			}
+		}, 1000); 
+	}
+</script>

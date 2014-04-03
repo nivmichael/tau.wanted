@@ -1,9 +1,73 @@
 * {
 	direction:rtl !important;
+	
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 input {
 	text-align: right !important;
+}
+
+#test {
+	font-size:16px;
+	height:16px;
+	margin-top: -37px;
+	text-align:center;
+	padding: 8px 0 8px 0;
+}
+
+#test table{
+	margin:auto;
+	max-width:100%;
+}
+
+#test table td{
+	text-align: center;
+}
+
+#test #loading_text {
+	font-weight: bold;
+	color: gray;
+}
+
+#test .pullDownIcon {
+	display:inline-block;
+	width:18px; height:25px;
+	background:url('images/pull-icon.png') 0 0 no-repeat;
+	-webkit-transition-property:-webkit-transform;
+	-webkit-transition-duration:250ms;	
+}
+
+#test.flip .pullDownIcon {
+	-webkit-transform:rotate(-180deg) translateZ(0);
+}
+
+#test.loading .pullDownIcon {
+	background-position:0 100%;
+	-webkit-transform:rotate(0deg) translateZ(0);
+	-webkit-transition-duration:0ms;
+
+	-webkit-animation-name:loading;
+	-webkit-animation-duration:2s;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-animation-timing-function:linear;
+}
+
+@-webkit-keyframes loading {
+	from { -webkit-transform:rotate(0deg) translateZ(0); }
+	to { -webkit-transform:rotate(360deg) translateZ(0); }
+}
+
+#cover {
+	background-color: white;
+	z-index: 999;
+	position:absolute;
+	width:100%;
+	height:100%;
 }
 
 .error {
@@ -29,6 +93,7 @@ input {
 }
 
 .header_normal {
+	z-index:999;
 	text-align: center;
 }
 
@@ -57,6 +122,9 @@ input {
 
 .iteration_container {
 	border-bottom: 1px dashed gray;
+	border-top: 1px dashed gray;
+	text-align:center;
+	display:none;
 }
 
 #date_of_birth .ui-controlgroup-controls {
@@ -89,6 +157,14 @@ input {
 
 .small_date .ui-controlgroup-controls .ui-select {
     width: 50%;
+}
+
+.add_container, .remove_container {
+	background: lightgray !important;
+}
+
+#self_eval h4 {
+	margin:0
 }
 
 .img_match_0{  background:url('images/stars_halfs.png') 0 0px no-repeat;}
