@@ -305,7 +305,7 @@ function update_user(values) {
 	var parameters = {'user_id' : user_id, 'values' : values, 'hash': localStorage.logged_in};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -340,7 +340,7 @@ function get_faculty_courses(faculty_array, get_all) {
 	}	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -365,7 +365,7 @@ function get_employment_sub_categories(category, container, type) {
 	var parameters = {'category' : category, 'type' : type};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -395,7 +395,7 @@ function get_employment_sub_categories(category, container, type) {
 function get_employment_categories() {
 	var action = 'get_employment_categories';
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -426,7 +426,7 @@ function register_user(values) {
 	var parameters = {'values' : JSON.stringify(values)};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -459,7 +459,7 @@ function user_login() {
 	var parameters = {'login_email' : login_email, 'login_password' : login_password};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -490,7 +490,7 @@ function verify_user_logged_in(page) {
 	var parameters = {'hash' : localStorage.logged_in};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -521,7 +521,7 @@ function get_jobs(override) {
 	var parameters = {'user_id' : user_id, 'override': override};
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -552,7 +552,7 @@ function get_user() {
 	var parameters = {'user_id' : user_id};
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, false);
+	req.open("POST", href_url, true);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
