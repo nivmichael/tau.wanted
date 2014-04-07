@@ -5,57 +5,66 @@ var details = null;
 var profile_loaded = false;
 var jobs_loaded = null;
 
-$('#jobs_container').on('mousedown', function(e){
-	mouseY = e.pageY;
-	mouselimit = 0;
-	$(this).on('mousemove', function(e){
-		if(mouseY != e.pageY) {
-			current_margin = parseInt($('#test').css('margin-top'));
-			move_pixels = e.pageY-mouseY
-			new_margin = current_margin + move_pixels;
-			if(new_margin < -37) {
-				new_margin = -37;
-			} else if(new_margin > 10) {
-				$('#test #loading_text').html('שחררו לרענן משרות...');
-				$('#test').addClass('flip');
-				new_margin = 10;				
-			} else if (new_margin > 100000) {
-				
-			} else {
-				$('#test #loading_text').html('משכו למטה לרענון משרות...');
-				$('#test').removeClass('flip');
-			}
-			$('#test').animate({'margin-top': new_margin + 'px'}, 30);
+// Pull down to refresh module
+$(document).on('scroll', function (){
+	if($(this).scrollTop() == '0') {
+		$('#jobs_container').on('vmousedown', function(e){
 			mouseY = e.pageY;
-		}
-	})
-});
-$('#jobs_container').on('mouseup', function(e){
-	mouseY = -1;
-	$(this).off('mousemove');
-	if(new_margin == 10) {
-		new_margin = -37;
-		$('#test #loading_text').html('מרענן משרות...');
-		$('#test').removeClass('flip');
-		$('.pullDownIcon').css('opacity', '0');
-		get_jobs(true);
-	} else {
-		$('#test').animate({'margin-top': -37 + 'px'}, 100);
-		$('#test #loading_text').html('משכו למטה לרענון משרות...');
-		$('#test').removeClass('flip');		
+			mouselimit = 0;
+			new_margin = -37;
+			$(this).on('vmousemove', function(e){
+				if(mouseY != e.pageY) {
+					current_margin = parseInt($('#test').css('margin-top'));
+					move_pixels = e.pageY-mouseY
+					new_margin = current_margin + move_pixels;
+					if(new_margin < -37) {
+						new_margin = -37;
+					} else if(new_margin > 10) {
+						$('#test #loading_text').html('שחררו לרענן משרות...');
+						$('#test').addClass('flip');
+						new_margin = 10;				
+					} else if (new_margin > 100000) {
+						
+					} else {
+						$('#test #loading_text').html('משכו למטה לרענון משרות...');
+						$('#test').removeClass('flip');
+					}
+					$('#test').css({'margin-top': new_margin + 'px'});
+					mouseY = e.pageY;
+				}
+			})
+		});
+		$('#jobs_container').on('vmouseup', function(e){
+			mouseY = -1;
+			$(this).off('vmousemove');
+			if(new_margin == 10) {
+				new_margin = -37;
+				$('#test #loading_text').html('מרענן משרות...');
+				$('#test').removeClass('flip');
+				$('.pullDownIcon').css('opacity', '0');
+				get_jobs(true);
+			} else {
+				$('#test').animate({'margin-top': -37 + 'px'}, 100);
+				$('#test #loading_text').html('משכו למטה לרענון משרות...');
+				$('#test').removeClass('flip');		
+			}
+		});
+		$('#jobs_container :not(#jobs_container *)').on('vmouseout', function(e){
+			mouseY = -1;
+			$(this).off('vmousemove');
+			$('#test').animate({'margin-top': -37 + 'px'}, 100);
+			$('#test #loading_text').html('משכו למטה לרענון משרות...');
+			$('#test').removeClass('flip');
+		});
+	} else { // Disabling module if not on top of page...
+		$('#jobs_container').off('vmousedown');
+		$('#jobs_container').off('vmousemove');
+		$('#jobs_container').off('vmouseup');
 	}
-});
-$('#jobs_container :not(#jobs_container *)').on('mouseout', function(e){
-	mouseY = -1;
-	$(this).off('mousemove');
-	$('#test').animate({'margin-top': -37 + 'px'}, 100);
-	$('#test #loading_text').html('משכו למטה לרענון משרות...');
-	$('#test').removeClass('flip');
 });
 
 // Login Page
 $('#Login_Page').on("pagebeforecreate", function() {
-	$('#cover').hide();
 	if($('input').val() == '') {
 		$('input').prev('div').show();
 	} else {
@@ -90,11 +99,26 @@ $('#registration_form').submit(function(e){
 $('#jobs_feed').on("pagebeforeshow", function() {
 	loading('show');
 	if(!localStorage.logged_in) {
+		$(this).hide();
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
+		location.reload(1);
 	} else {
-		$('#cover').hide();
 		if(user_id == null) {
 			verify_user_logged_in('jobs_feed');
+		}
+	}
+});
+
+$(document).on('click', '.job_result', function(){
+	if($(this).css('opacity') == '1' && new_margin == -37) {
+		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
+		job_title = $(this).find('div').next().html();
+		if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
+			//apply_to_job(job_id);
+			$(this).css({'opacity': '0.7', 'cursor': 'default'});
+			$(this).append('<div style="text-align: center;color: red;">הוגשה מועמדות</div>');
+		} else {
+			return false;
 		}
 	}
 });
@@ -102,7 +126,7 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
 	get_employment_categories();
-	get_faculty_courses({},true);
+	get_faculty_courses();
 	$('#education input:checkbox').on('click', function() {
 		var $arr_values = $(this).parent().siblings(':hidden');
 		if($arr_values.val().length > 0) {	    
@@ -118,18 +142,15 @@ $('#profile_page').on("pagebeforecreate", function() {
 });
 
 $('#profile_page').on("pagebeforeshow", function() {
-	$('#cover').hide();
 	if(!localStorage.logged_in) {
-		$(this).children().hide();
+		$(this).hide();
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
-		$('#Login_Page').children().show();
+		location.reload(1);
 	} else if (!profile_loaded) {
 		if(user_id == null) {
 			verify_user_logged_in('profile_page');
 		}
 		get_user();
-		
-	   	        
 	    profile_loaded = true;
 	}
 });
@@ -261,15 +282,8 @@ $('.logout').on('click', function(e) {
 	localStorage.clear();
 	user_id = null;
 	setTimeout(function(){
-		$.mobile.changePage(
-		    window.location.href,
-		    {
-		      allowSamePageTransition : true,
-		      transition              : 'fade',
-		      showLoadMsg             : false,
-		      reloadPage              : true
-		    }	    
-		  );
+		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
+		location.reload(1);
 	}, 2000);
 });
 
@@ -300,6 +314,28 @@ $('input').blur(function(){
 /***************************************************/
 /******************** Functions ********************/
 /***************************************************/
+function apply_to_job(job_id) {
+	var action = 'apply_to_job';
+	var parameters = {'user_id' : user_id, 'job_id' : job_id};	
+	var json_param = JSON.stringify(parameters);
+	var req = new XMLHttpRequest(); 
+	req.open("POST", href_url, true);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.onreadystatechange = function() {
+		if (req.readyState == 4) {
+			if (req.status == 200 || req.status == 0) {
+				var data = JSON.parse(req.responseText);
+				if(data.success) {
+				}
+				else {
+				}
+				loading('hide');
+			}
+		}
+	};	
+	req.send("action=" + action + "&parameters=" + json_param);
+}
+
 function update_user(values) {
 	var action = 'update_user';
 	var parameters = {'user_id' : user_id, 'values' : values, 'hash': localStorage.logged_in};	
@@ -331,11 +367,10 @@ function update_user(values) {
 	req.send("action=" + action + "&parameters=" + json_param);
 }
 
-function get_faculty_courses(faculty_array, get_all) {
-	if(typeof(get_all)==='undefined') get_all = false;
+function get_faculty_courses(faculty_array) {
 	var action = 'get_faculty_courses';
 	var parameters = {};
-	if(!get_all) {
+	if(faculty_array) {
 		parameters = {'faculty_array' : faculty_array};
 	}	
 	var json_param = JSON.stringify(parameters);
@@ -509,6 +544,8 @@ function verify_user_logged_in(page) {
 					}
 				} else {
 					$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
+					localStorage.clear();
+					location.reload(1);
 				}
 			}
 		}
@@ -517,6 +554,7 @@ function verify_user_logged_in(page) {
 }
 
 function get_jobs(override) {
+	loading('show');
 	var action = 'get_jobs';
 	var parameters = {'user_id' : user_id, 'override': override};
 	var json_param = JSON.stringify(parameters);
@@ -530,13 +568,13 @@ function get_jobs(override) {
 				if(data.success) {
 					if(override) {
 						$('#test').animate({'margin-top': -37 + 'px'}, 300);
-						$('#jobs_container h3').prev('div').hide();
+						$('.incomplete').hide();
 						$('.job_result').remove();
 						$('.pullDownIcon').css('opacity', '1');
 					}
 					$('#jobs_container').append(data.jobs);
 					if(data.incomplete) {
-						$('#jobs_container h3').prev('div').show();
+						$('.incomplete').show();
 					}
 				}
 				loading('hide');
@@ -567,12 +605,19 @@ function get_user() {
 					}
 					
 					var field_name = '';
-					var form_fields = $('#profile_form').serializeArray();	
-					details['self_eval_'] = JSON.parse(details['self_eval_']);
-					for (field in details['self_eval_']) {
-						details['self_eval_' + field] = details['self_eval_'][field];
-						$('#remaining_points span').html(parseInt($('#remaining_points span').html()) + parseInt(details['self_eval_'][field]));
+					var form_fields = $('#profile_form').serializeArray();
+					
+					// Explode self evaluation object into seperate fields...
+					if ('self_eval_' in details) {
+						details['self_eval_'] = JSON.parse(details['self_eval_']);
+						for (field in details['self_eval_']) {
+							details['self_eval_' + field] = details['self_eval_'][field];
+							$('#remaining_points span').html(parseInt($('#remaining_points span').html()) + parseInt(details['self_eval_'][field]));
+						}
+					} else {
+						$('#remaining_points span').html(40);
 					}
+					
 					$.each(form_fields, function(i, field){
 						field_name = field.name;
 						$this = $('#' + field_name);
@@ -594,16 +639,17 @@ function get_user() {
 							    	$this.parent().find(':checkbox[name=' + i + ']').click();
 							    }
 							}
-						} else if($this.hasClass("slider")) {
+						} else if($this.hasClass("slider") && 'self_eval_' in details) {
 							$this.val(-$this.val());
 							$this.next('div').children('a').css('left', parseInt(-details[field_name]) + '%');
-						} else {			
+						} else { // Input type 'text' 
 							if($this.val() != '') {
-								$this.parent().prev('div').hide();
+								$this.parent().prev('div').hide(); // Hide Placeholders if value is set...
 							}			
 						}
 				    });
 				    
+				    // Set Next_Step profession & category if exists, else: set to default.
 				    if(details['next_step_profession'] && details['next_step_category'] != 'no_experience') {
 				    	get_employment_sub_categories(details['next_step_category'], 'next_step_category');
 				    	$('#next_step_profession').val(details['next_step_profession']);
@@ -612,9 +658,11 @@ function get_user() {
 				    }
 				    $('#next_step_profession').prev('span').html($('#next_step_profession>option:selected').text());
 				    
+				    // Show existing gallery photos before Upload Iframe
 			    	$(details['gallery']).prependTo('#build_profile .ui-collapsible-content').trigger('create');
 				    
-				    var current_vals = [];
+				    // Self Evaluation handler, only if set.
+					var current_vals = [];
 				    var new_val = 0;
 				    var total = 390 - parseInt($('#remaining_points span').html());
 				    $('.slider').each(function(){
