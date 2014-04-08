@@ -114,7 +114,7 @@ $(document).on('click', '.job_result', function(){
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
 		if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
-			//apply_to_job(job_id);
+			//apply_to_job(job_id, job_title);TEST
 			$(this).css({'opacity': '0.7', 'cursor': 'default'});
 			$(this).append('<div style="text-align: center;color: red;">הוגשה מועמדות</div>');
 		} else {
@@ -314,9 +314,10 @@ $('input').blur(function(){
 /***************************************************/
 /******************** Functions ********************/
 /***************************************************/
-function apply_to_job(job_id) {
+function apply_to_job(job_id, job_title) {
+	loading('show');
 	var action = 'apply_to_job';
-	var parameters = {'user_id' : user_id, 'job_id' : job_id};	
+	var parameters = {'user_id' : user_id, 'job_id' : job_id, 'job_title' : job_title};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
