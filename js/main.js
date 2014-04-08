@@ -114,9 +114,7 @@ $(document).on('click', '.job_result', function(){
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
 		if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
-			//apply_to_job(job_id, job_title);TEST
-			$(this).css({'opacity': '0.7', 'cursor': 'default'});
-			$(this).append('<div style="text-align: center;color: red;">הוגשה מועמדות</div>');
+			apply_to_job(job_id, job_title,$(this));
 		} else {
 			return false;
 		}
@@ -314,7 +312,7 @@ $('input').blur(function(){
 /***************************************************/
 /******************** Functions ********************/
 /***************************************************/
-function apply_to_job(job_id, job_title) {
+function apply_to_job(job_id, job_title, $this) {
 	loading('show');
 	var action = 'apply_to_job';
 	var parameters = {'user_id' : user_id, 'job_id' : job_id, 'job_title' : job_title};	
@@ -327,8 +325,12 @@ function apply_to_job(job_id, job_title) {
 			if (req.status == 200 || req.status == 0) {
 				var data = JSON.parse(req.responseText);
 				if(data.success) {
+					$this.css({'opacity': '0.7', 'cursor': 'default'});
+					$this.append('<div style="text-align: center;color: red;">הוגשה מועמדות</div>');
 				}
 				else {
+					$('#error_alert_content').html('לא היה ניתן להגיש מועמדות למשרה. אנא נסו שנית.');
+					$('#lnkDialog').click();
 				}
 				loading('hide');
 			}
