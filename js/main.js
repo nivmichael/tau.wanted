@@ -4,21 +4,28 @@ var CheckFields = null;
 var details = null;
 var profile_loaded = false;
 var jobs_loaded = null;
+var pull_down_div_width_set = false;
+var min_margin = -37;
+var new_margin = min_margin;
 
 // Pull down to refresh module
 $(document).on('scroll', function (){
 	if($(this).scrollTop() == '0') {
 		$('#jobs_container').on('vmousedown', function(e){
+			if(!pull_down_div_width_set) {
+				$('#test div').width(parseInt($('#test div').width() + 5));
+				pull_down_div_width_set = true;
+			}
 			mouseY = e.pageY;
 			mouselimit = 0;
-			new_margin = -37;
+			new_margin = min_margin;
 			$(this).on('vmousemove', function(e){
 				if(mouseY != e.pageY) {
 					current_margin = parseInt($('#test').css('margin-top'));
-					move_pixels = e.pageY-mouseY
+					move_pixels = e.pageY-mouseY;
 					new_margin = current_margin + move_pixels;
-					if(new_margin < -37) {
-						new_margin = -37;
+					if(new_margin < min_margin) {
+						new_margin = min_margin;
 					} else if(new_margin > 10) {
 						$('#test #loading_text').html('שחררו לרענן משרות...');
 						$('#test').addClass('flip');
@@ -32,19 +39,19 @@ $(document).on('scroll', function (){
 					$('#test').css({'margin-top': new_margin + 'px'});
 					mouseY = e.pageY;
 				}
-			})
+			});
 		});
 		$('#jobs_container').on('vmouseup', function(e){
 			mouseY = -1;
 			$(this).off('vmousemove');
 			if(new_margin == 10) {
-				new_margin = -37;
+				new_margin = min_margin;
 				$('#test #loading_text').html('מרענן משרות...');
 				$('#test').removeClass('flip');
 				$('.pullDownIcon').css('opacity', '0');
 				get_jobs(true);
 			} else {
-				$('#test').animate({'margin-top': -37 + 'px'}, 100);
+				$('#test').animate({'margin-top': min_margin + 'px'}, 100);
 				$('#test #loading_text').html('משכו למטה לרענון משרות...');
 				$('#test').removeClass('flip');		
 			}
@@ -52,7 +59,7 @@ $(document).on('scroll', function (){
 		$('#jobs_container :not(#jobs_container *)').on('vmouseout', function(e){
 			mouseY = -1;
 			$(this).off('vmousemove');
-			$('#test').animate({'margin-top': -37 + 'px'}, 100);
+			$('#test').animate({'margin-top': min_margin + 'px'}, 100);
 			$('#test #loading_text').html('משכו למטה לרענון משרות...');
 			$('#test').removeClass('flip');
 		});
@@ -72,7 +79,7 @@ $('#Login_Page').on("pagebeforecreate", function() {
 	}
 	if(localStorage.logged_in) {
 		$(this).children().hide();
-		verify_user_logged_in('jobs_feed');
+		verify_user_logged_in();
 	}
 });
 
@@ -83,6 +90,10 @@ $('#login_form').submit(function(e){
 });
 
 // Registration Page
+$('#registration_page').on("pagebeforecreate", function() {
+	get_cities();
+});
+
 $('#registration_form').submit(function(e){
 	e.preventDefault();
 	if(validate_registration()) {
@@ -96,6 +107,12 @@ $('#registration_form').submit(function(e){
 });
 
 // Home Page
+$('#jobs_feed').on("pagebeforecreate", function() {
+	// We're doing it here ONCE, assuming that #jobs_feed will always be shown before #profile_page, therefore created earlier
+	// This way tha Faculty Courses will be already on page and will not interrupt other JS regarding them 
+	get_faculty_courses();
+});
+
 $('#jobs_feed').on("pagebeforeshow", function() {
 	loading('show');
 	if(!localStorage.logged_in) {
@@ -104,13 +121,13 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 		location.reload(1);
 	} else {
 		if(user_id == null) {
-			verify_user_logged_in('jobs_feed');
+			verify_user_logged_in();
 		}
 	}
 });
 
 $(document).on('click', '.job_result', function(){
-	if($(this).css('opacity') == '1' && new_margin == -37) {
+	if($(this).css('opacity') == '1' && new_margin == min_margin) {
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
 		if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
@@ -124,7 +141,8 @@ $(document).on('click', '.job_result', function(){
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
 	get_employment_categories();
-	get_faculty_courses();
+	get_cities();
+	
 	$('#education input:checkbox').on('click', function() {
 		var $arr_values = $(this).parent().siblings(':hidden');
 		if($arr_values.val().length > 0) {	    
@@ -146,10 +164,15 @@ $('#profile_page').on("pagebeforeshow", function() {
 		location.reload(1);
 	} else if (!profile_loaded) {
 		if(user_id == null) {
-			verify_user_logged_in('profile_page');
+			$('body *').not('.ui-loader').hide();
+			$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
+			setTimeout(function(){
+				location.reload(1)
+			}, 1000);
+		} else {
+			get_user();
+			profile_loaded = true;
 		}
-		get_user();
-	    profile_loaded = true;
 	}
 });
 
@@ -229,7 +252,7 @@ $('.choose_button').on('click',function(e, data) {
 					old_faculty = faculty;
 				}
 				if($(this).prop('checked')) {					
-					var course = $(this).siblings('label').text()					
+					var course = $(this).siblings('label').text();
 					checked_values[faculty][course] = $(this).val();
 				}			
 			});
@@ -241,7 +264,7 @@ $('.choose_button').on('click',function(e, data) {
 $('#submit_profile').click(function(e){
 	loading('show');
 	e.preventDefault();
-	var form_fields = $('#profile_form').serializeArray()
+	var form_fields = $('#profile_form').serializeArray();
 	var fields_object = {};
 	fields_object['gallery'] = {};
 	var self_eval = [];
@@ -296,7 +319,7 @@ $('input').focus(function(){
 		if($(this).val() != '') {
 			$(this).parent().prev('login_label').hide();
 		}
-	})
+	});
 	},0);
 });
 
@@ -319,7 +342,7 @@ function apply_to_job(job_id, job_title, $this) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");;
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -345,7 +368,7 @@ function update_user(values) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -379,13 +402,13 @@ function get_faculty_courses(faculty_array) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
 				var data = JSON.parse(req.responseText);
 				if(data.success && data.success.length > 0) {
-					if(!get_all) {						
+					if(faculty_array) {						
 						$('#choose_content').append(data.success).trigger('create');
 					} else {
 						$('.faculty_list').prepend(data.success).trigger('create');
@@ -404,7 +427,7 @@ function get_employment_sub_categories(category, container, type) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -434,12 +457,28 @@ function get_employment_categories() {
 	var action = 'get_employment_categories';
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
 				var data = JSON.parse(req.responseText);
 				$('.job_categories').append(data.success);
+			}
+		}
+	};	
+	req.send("action=" + action);
+}
+
+function get_cities() {
+	var action = 'get_cities';
+	var req = new XMLHttpRequest(); 
+	req.open("POST", href_url, true);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	req.onreadystatechange = function() {
+		if (req.readyState == 4) {
+			if (req.status == 200 || req.status == 0) {
+				var data = JSON.parse(req.responseText);
+				$('.cities').append(data.success);
 			}
 		}
 	};	
@@ -465,7 +504,7 @@ function register_user(values) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -498,7 +537,7 @@ function user_login() {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -523,13 +562,13 @@ function user_login() {
 	req.send("action=" + action + "&parameters=" + json_param);
 }
 
-function verify_user_logged_in(page) {
+function verify_user_logged_in() {
 	var action = 'verify_user_logged_in';
 	var parameters = {'hash' : localStorage.logged_in};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -538,7 +577,7 @@ function verify_user_logged_in(page) {
 					user_id = data.user_id;					
 					var name = localStorage.logged_in.split(".");
 					$('.header_normal h1').text("שלום, " + name[2]);
-					$(':mobile-pagecontainer').pagecontainer('change',"#" + page);
+					$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 					if(jobs_loaded == null) {
 						get_jobs();
 						jobs_loaded = setInterval(function() {
@@ -563,14 +602,14 @@ function get_jobs(override) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
 				data = JSON.parse(req.responseText);
 				if(data.success) {
 					if(override) {
-						$('#test').animate({'margin-top': -37 + 'px'}, 300);
+						$('#test').animate({'margin-top': min_margin + 'px'}, 300);
 						$('.incomplete').hide();
 						$('.job_result').remove();
 						$('.pullDownIcon').css('opacity', '1');
@@ -594,7 +633,7 @@ function get_user() {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -635,7 +674,7 @@ function get_user() {
 						} else if($this.hasClass("checkbox_array")) {
 							var checkbox_array = $this.val();
 							var id_value = $this.attr('id');
-							id_value = id_value.slice(id_value.indexOf("_") + 1, id_value.lastIndexOf("_"))
+							id_value = id_value.slice(id_value.indexOf("_") + 1, id_value.lastIndexOf("_"));
 							if (checkbox_array){
 								checkbox_array = JSON.parse(checkbox_array);
 								for (var i in checkbox_array) {

@@ -1,3 +1,4 @@
+/* General */
 * {
 	direction:rtl !important;
 	
@@ -12,6 +13,7 @@ input {
 	text-align: right !important;
 }
 
+/* Pull Down to Refresh Styles */
 #test {
 	font-size:16px;
 	height:16px;
@@ -20,13 +22,10 @@ input {
 	padding: 8px 0 8px 0;
 }
 
-#test table{
-	margin:auto;
-	max-width:100%;
-}
-
-#test table td{
-	text-align: center;
+#test div{
+	display: inline-block;
+	text-align: right;
+	max-width: 100% !important;
 }
 
 #test #loading_text {
@@ -38,45 +37,40 @@ input {
 	display:inline-block;
 	width:18px; height:25px;
 	background:url('images/pull-icon.png') 0 0 no-repeat;
+	
+	transition-property:transform;
+	transition-duration:250ms;
+	
+	-moz-transition-property:transform;
+	-moz-transition-duration:250ms;
+	
+	-ms-transition-property:transform;
+	-ms-transition-duration:250ms;
+	
 	-webkit-transition-property:-webkit-transform;
 	-webkit-transition-duration:250ms;	
 }
 
 #test.flip .pullDownIcon {
+	transform:rotate(-180deg) translateZ(0);
+	-moz-transform:rotate(-180deg) translateZ(0);
+	-ms-transform:rotate(-180deg) translateZ(0);
 	-webkit-transform:rotate(-180deg) translateZ(0);
 }
 
-#test.loading .pullDownIcon {
-	background-position:0 100%;
-	-webkit-transform:rotate(0deg) translateZ(0);
-	-webkit-transition-duration:0ms;
-
-	-webkit-animation-name:loading;
-	-webkit-animation-duration:2s;
-	-webkit-animation-iteration-count:infinite;
-	-webkit-animation-timing-function:linear;
-}
-
-@-webkit-keyframes loading {
-	from { -webkit-transform:rotate(0deg) translateZ(0); }
-	to { -webkit-transform:rotate(360deg) translateZ(0); }
-}
-
-#cover {
-	background-color: white;
-	z-index: 999;
-	position:absolute;
-	width:100%;
-	height:100%;
-}
-
+/* Login Page */ 
 .error {
 	color: red;
 	text-align: center;
 	visibility: hidden;
 }
 
-.login_label {
+.login_container div {
+	margin: 0;
+}
+
+/* Forms - General */
+.input_placeholder {
 	position: absolute;
 	color: gray;
 	top: 25%;
@@ -88,38 +82,7 @@ input {
 	position: relative;
 }
 
-.login_container div {
-	margin: 0;
-}
-
-.header_normal {
-	z-index:999;
-	text-align: center;
-}
-
-.job_result {
-	margin-top: 10px;
-	border-width: 1px;
-	border-radius:5px;
-}
-
-.job_result .match_percentage {
-	height:15px;
-	width:70px;
-}
-
-.incomplete {
-	text-align:center;
-	color:red;
-	font-size:0.7em;
-	display:none;
-}
-
-.jobs_header {
-	text-align:center;
-	margin-top:0;
-}
-
+/* Iteration Containers Handling */
 .iteration_container {
 	border-bottom: 1px dashed gray;
 	border-top: 1px dashed gray;
@@ -127,6 +90,11 @@ input {
 	display:none;
 }
 
+.add_container, .remove_container {
+	background: lightgray !important;
+}
+
+/* Short Select Inputs (dates) */
 #date_of_birth .ui-controlgroup-controls {
     width: 100%;
 }
@@ -159,12 +127,23 @@ input {
     width: 50%;
 }
 
-.add_container, .remove_container {
-	background: lightgray !important;
+/* Jobs Feed & Match Percentage */
+.incomplete {
+	text-align:center;
+	color:red;
+	font-size:0.7em;
+	display:none;
 }
 
-#self_eval h4 {
-	margin:0
+.job_result {
+	margin-top: 10px;
+	border-width: 1px;
+	border-radius:5px;
+}
+
+.job_result .match_percentage {
+	height:15px;
+	width:70px;
 }
 
 .img_match_0{  background:url('images/stars_halfs.png') 0 0px no-repeat;}
@@ -188,3 +167,13 @@ input {
 .img_match_90{ background:url('images/stars_halfs.png') 0 -143px no-repeat;}
 .img_match_95{ background:url('images/stars_halfs.png') 0 -158px no-repeat;}
 .img_match_100{background:url('images/stars_halfs.png') 0 -158px no-repeat;}
+
+/* Misc. */
+.header_normal {
+	z-index:999;
+	text-align: center;
+}
+
+#self_eval h4 {
+	margin:0
+}
