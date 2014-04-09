@@ -7,7 +7,7 @@
         div {border: 1px solid black;}
         input {width: 100%;}
     </style>
-    <script type="text/javascript" charset="utf-8" src="phonegap-1.1.0.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script type="text/javascript" charset="utf-8">
       
     var deviceReady = false;
@@ -124,6 +124,8 @@
         window.setTimeout(function() {
             if (!deviceReady) {
                 alert("Error: PhoneGap did not initialize.  Demo will not run correctly.");
+            } else {
+            	allert('success')
             }
         },2000);
     }
@@ -131,7 +133,7 @@
     </script>
 
   </head>
-  <body onload="">
+  <body onload="init();">
     <h3>PhoneGap Camera Upload Demo</h3>
     
     <div>
