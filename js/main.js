@@ -11,7 +11,7 @@ var new_margin = min_margin;
 // Pull down to refresh module
 $(document).on('scroll', function (){
 	if($(this).scrollTop() == '0') {
-		$('#jobs_container').on('vmousedown', function(e){
+		$('#jobs_container').on('touchstart', function(e){
 			if(!pull_down_div_width_set) {
 				$('#test div').width(parseInt($('#test div').width() + 5));
 				pull_down_div_width_set = true;
@@ -19,7 +19,7 @@ $(document).on('scroll', function (){
 			mouseY = e.pageY;
 			mouselimit = 0;
 			new_margin = min_margin;
-			$(this).on('vmousemove', function(e){
+			$(this).on('touchmove', function(e){
 				if(mouseY != e.pageY) {
 					current_margin = parseInt($('#test').css('margin-top'));
 					move_pixels = e.pageY-mouseY;
@@ -41,9 +41,9 @@ $(document).on('scroll', function (){
 				}
 			});
 		});
-		$('#jobs_container').on('vmouseup', function(e){
+		$('#jobs_container').on('touchend', function(e){
 			mouseY = -1;
-			$(this).off('vmousemove');
+			$(this).off('touchmove');
 			if(new_margin == 10) {
 				new_margin = min_margin;
 				$('#test #loading_text').html('מרענן משרות...');
@@ -58,15 +58,15 @@ $(document).on('scroll', function (){
 		});
 		$('#jobs_container :not(#jobs_container *)').on('vmouseout', function(e){
 			mouseY = -1;
-			$(this).off('vmousemove');
+			$(this).off('touchmove');
 			$('#test').animate({'margin-top': min_margin + 'px'}, 100);
 			$('#test #loading_text').html('משכו למטה לרענון משרות...');
 			$('#test').removeClass('flip');
 		});
 	} else { // Disabling module if not on top of page...
-		$('#jobs_container').off('vmousedown');
-		$('#jobs_container').off('vmousemove');
-		$('#jobs_container').off('vmouseup');
+		$('#jobs_container').off('touchstart');
+		$('#jobs_container').off('touchmove');
+		$('#jobs_container').off('touchend');
 	}
 });
 
@@ -167,8 +167,8 @@ $('#profile_page').on("pagebeforeshow", function() {
 			$('body *').not('.ui-loader').hide();
 			$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 			setTimeout(function(){
-				location.reload(1)
-			}, 1000);
+				location.reload(1);
+			}, 2000);
 		} else {
 			get_user();
 			profile_loaded = true;
@@ -414,7 +414,6 @@ function get_faculty_courses(faculty_array) {
 						$('.faculty_list').prepend(data.success).trigger('create');
 					}
 				}
-				loading('hide');
 			}
 		}
 	};	
