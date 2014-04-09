@@ -3,21 +3,21 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "il.co.wanted.tau.poll"
+        id        = "wanted.tau"
         version   = "1.0.5"
         versionCode = "15" >
 
         <!-- versionCode is optional and Android only -->
 
     <preference name="phonegap-version" value="3.3.0" />
-    <name>AcadeMe TAU</name>
+    <name>TAU Wanted</name>
 
     <description>
         AcadeMe
     </description>
 
     <author href="http://wanted.co.il" email="michael@wanted.co.il">
-       Michael Niv
+       Jonatan Gilman
     </author>
 
     <!--

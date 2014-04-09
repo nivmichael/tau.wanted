@@ -12,7 +12,7 @@ var new_margin = min_margin;
 $(document).on('scroll', function (){
 	if($(this).scrollTop() == '0') {
 		$('#jobs_container').on('touchstart', function(e){
-			alert()
+			alert();
 			if(!pull_down_div_width_set) {
 				$('#test div').width(parseInt($('#test div').width() + 5));
 				pull_down_div_width_set = true;
