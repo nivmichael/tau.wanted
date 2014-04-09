@@ -8,7 +8,58 @@ var pull_down_div_width_set = false;
 var min_margin = -37;
 var new_margin = min_margin;
 
+
+/*
+
+var myScroll, spullDownEl, pullDownOffset;
+
+function pullDownAction () {
+	myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
+}
+
+function pullUpAction () {
+	myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
+}
+
+function loaded() {
+	pullDownEl = document.getElementById('test');
+	pullDownOffset = pullDownEl.offsetHeight;
+		
+	myScroll = new iScroll('jobs_container', {
+		useTransition: true,
+		topOffset: pullDownOffset,
+		onRefresh: function () {
+			pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
+		},
+		onScrollMove: function () {
+			if (this.y > 5 && !pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'flip';
+				pullDownEl.querySelector('#loading_text').innerHTML = 'שחררו לרענות משרות';
+				this.minScrollY = 0;
+			} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
+				this.minScrollY = -pullDownOffset;
+			}
+		},
+		onScrollEnd: function () {
+			if (pullDownEl.className.match('flip')) {
+				loading('show');
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'מרענן משרות...';
+				pullDownAction();	// Execute custom function (ajax call?)
+			}
+		}
+	});
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+*/
+
+
 // Pull down to refresh module
+/*
 $(document).on('scroll', function (){
 	if($(this).scrollTop() == '0') {
 		$('#jobs_container').on('touchstart', function(e){
@@ -22,7 +73,7 @@ $(document).on('scroll', function (){
 			$(this).on('touchmove', function(e){
 				if(mouseY != e.pageY) {
 					current_margin = parseInt($('#test').css('margin-top'));
-					move_pixels = e.pageY-mouseY;
+					move_pixels = (e.pageY-mouseY) / 2;
 					new_margin = current_margin + move_pixels;
 					if(new_margin < min_margin) {
 						new_margin = min_margin;
@@ -69,7 +120,8 @@ $(document).on('scroll', function (){
 		$('#jobs_container').off('touchmove');
 		$('#jobs_container').off('touchend');
 	}
-});
+});*/
+
 
 // Login Page
 $('#Login_Page').on("pagebeforecreate", function() {
@@ -614,10 +666,27 @@ function get_jobs(override) {
 						$('.job_result').remove();
 						$('.pullDownIcon').css('opacity', '1');
 					}
+					
 					$('#jobs_container').append(data.jobs);
+					
 					if(data.incomplete) {
 						$('.incomplete').show();
 					}
+					
+					// Pull Down to Refresh
+					top_limit = $('#jobs_container').position().top;
+					$('#jobs_container').draggable({
+						axis: "y",
+						containment: [0, top_limit],
+						start: function() {
+						},
+						drag: function() {
+							
+						},
+						stop: function() {
+							$(this).animate({'top': 0}, 100);
+						}
+					});
 				}
 				loading('hide');
 			}
