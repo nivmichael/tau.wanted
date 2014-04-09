@@ -37,7 +37,13 @@
 	<link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />	
 	<link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
 	<link rel="stylesheet" href="css/custom_styles.css">
-	
+	<script>
+		document.addEventListener("deviceready", onDeviceReady, false);
+
+		function onDeviceReady() {
+		   alert("ccc");
+		}
+	</script>
 </head>
 <body style="direction:rtl">
 	<div data-role="page" id="Login_Page">
