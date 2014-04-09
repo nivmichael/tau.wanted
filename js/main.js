@@ -12,7 +12,6 @@ var new_margin = min_margin;
 $(document).on('scroll', function (){
 	if($(this).scrollTop() == '0') {
 		$('#jobs_container').on('touchstart', function(e){
-			
 			if(!pull_down_div_width_set) {
 				$('#test div').width(parseInt($('#test div').width() + 5));
 				pull_down_div_width_set = true;
@@ -21,7 +20,6 @@ $(document).on('scroll', function (){
 			mouselimit = 0;
 			new_margin = min_margin;
 			$(this).on('touchmove', function(e){
-				alert();
 				if(mouseY != e.pageY) {
 					current_margin = parseInt($('#test').css('margin-top'));
 					move_pixels = e.pageY-mouseY;
@@ -44,6 +42,7 @@ $(document).on('scroll', function (){
 			});
 		});
 		$('#jobs_container').on('touchend', function(e){
+			alert();
 			mouseY = -1;
 			$(this).off('touchmove');
 			if(new_margin == 10) {
