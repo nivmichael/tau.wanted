@@ -442,11 +442,12 @@ function uploadPicture() {
 		alert(href_url); // DELETE
 		// Specify transfer options
 		var options = new FileUploadOptions();
+		alert('new object created');
 		options.fileKey="file";
 		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 		options.mimeType="image/jpeg";
-		options.chunkedMode = false;
-		alert(options.mimeType); // DELETE
+		options.chunkedMode = true;
+		alert('options are set'); // DELETE
 		// Transfer picture to server
 		loading('show');
 		var ft = new FileTransfer();
