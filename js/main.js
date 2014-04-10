@@ -455,6 +455,8 @@ function uploadPicture() {
 		loading('show');
 		var ft = new FileTransfer();
 		ft.upload(imageURI, href_url, function(r) {
+			$('#error_alert_content').html(r.response);
+			$('#lnkDialog').click();
 			viewUploadedPictures();
 		}, function(error) {
 			$('#error_alert_content').html('שגיאה בעת העלאת הקובץ, אנא נסו שנית.');
