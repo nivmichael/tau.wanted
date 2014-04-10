@@ -450,7 +450,7 @@ function uploadPicture() {
 		// Transfer picture to server
 		loading('show');
 		var ft = new FileTransfer();
-		ft.upload(imageURI, href_url, function(r) {
+		ft.upload(imageURI, href_url + "?hash_verify=" + localStorage.logged_in, function(r) {
 			viewUploadedPictures();
 		}, function(error) {
 			$('#error_alert_content').html('לא היה ניתן להגיש מועמדות למשרה. אנא נסו שנית.');
@@ -480,7 +480,7 @@ function viewUploadedPictures() {
 				loading('hide');
 			}
 		};
-		xmlhttp.open("GET", href_url , true);
+		xmlhttp.open("GET", href_url + "?user_id=" + user_id , true);
 		xmlhttp.send();       	
     }	
 }
