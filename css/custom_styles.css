@@ -17,9 +17,10 @@ input {
 #test {
 	font-size:16px;
 	height:16px;
-	margin-top: -37px;
+	position:absolute;
+	width:100%;
+	top:-35px;
 	text-align:center;
-	padding: 8px 0 8px 0;
 }
 
 #test div{
@@ -31,6 +32,9 @@ input {
 #test #loading_text {
 	font-weight: bold;
 	color: gray;
+	vertical-align:top;
+	position:relative;
+	top:3px;
 }
 
 #test .pullDownIcon {
@@ -144,6 +148,17 @@ input {
 .job_result .match_percentage {
 	height:15px;
 	width:70px;
+}
+
+.description {
+	width:1200px;
+	max-width:100%;
+	clear:left;
+	margin-left:75px;
+	font-weight:normal;
+	font-size:0.9em;
+	color:darkblue;
+	display:none
 }
 
 .img_match_0{  background:url('images/stars_halfs.png') 0 0px no-repeat;}

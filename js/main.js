@@ -4,10 +4,12 @@ var CheckFields = null;
 var details = null;
 var profile_loaded = false;
 var jobs_loaded = null;
-var pull_down_div_width_set = false;
+/*var pull_down_div_width_set = false;
 var min_margin = -37;
 var new_margin = min_margin;
-
+*/
+var top_limit = null;
+var change_limit;
 
 /*
 
@@ -180,14 +182,16 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 });
 
 $(document).on('click', '.job_result', function(){
-	if($(this).css('opacity') == '1' && new_margin == min_margin) {
-		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
-		job_title = $(this).find('div').next().html();
-		if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
-			apply_to_job(job_id, job_title,$(this));
-		} else {
-			return false;
-		}
+	job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
+	job_title = $(this).find('div').next().html();
+	$(this).find('.description').slideToggle('fast');
+});
+
+$(document).on('click', '.job_result button', function() {
+	if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
+		apply_to_job(job_id, job_title, $(this).closest('.job_result'));
+	} else {
+		return false;
 	}
 });
 
@@ -217,11 +221,11 @@ $('#profile_page').on("pagebeforeshow", function() {
 		location.reload(1);
 	} else if (!profile_loaded) {
 		if(user_id == null) {
-			$('body *').not('.ui-loader').hide();
+			/*$('body *').not('.ui-loader').hide();
 			$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 			setTimeout(function(){
 				location.reload(1);
-			}, 2000);
+			}, 2000);*/
 		} else {
 			get_user();
 			profile_loaded = true;
@@ -388,6 +392,119 @@ $('input').blur(function(){
 /***************************************************/
 /******************** Functions ********************/
 /***************************************************/
+function takePicture() {
+	navigator.camera.getPicture(
+		function(uri) {
+        	var img = document.getElementById('camera_image');
+			img.style.visibility = "visible";
+			img.style.display = "block";
+			img.src = uri;
+		},
+		function(e) {
+			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
+			$('#lnkDialog').click();
+		},
+		{ quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI});
+};
+
+function selectPicture() {
+	navigator.camera.getPicture(
+		function(uri) {
+			var img = document.getElementById('camera_image');
+			img.style.visibility = "visible";
+			img.style.display = "block";
+			img.src = uri;
+			alert(uri); // DELETE AFTERWARDS
+			document.getElementById('camera_status').innerHTML = "Success";
+		},
+		function(e) {
+			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
+			$('#lnkDialog').click();
+		},
+		{ quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI, sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY});
+};
+
+function uploadPicture() {
+	// Get URI of picture to upload
+	var img = document.getElementById('camera_image');
+	var imageURI = img.src;
+	if (!imageURI || (img.style.display == "none")) {
+		$('#error_alert_content').html('יש לצלם תמונה במצלמה, או לבחורה תמונה קיימת מהמכשיר.');
+		$('#lnkDialog').click();
+		return;
+	}
+
+	if (href_url) {
+		// Specify transfer options
+		var options = new FileUploadOptions();
+		options.fileKey="file";
+		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+		options.mimeType="image/jpeg";
+		options.chunkedMode = false;
+
+		// Transfer picture to server
+		var ft = new FileTransfer();
+		ft.upload(imageURI, server, function(r) {
+			viewUploadedPictures();            	
+		}, function(error) {
+			$('#error_alert_content').html('לא היה ניתן להגיש מועמדות למשרה. אנא נסו שנית.');
+			$('#lnkDialog').click();
+		}, options);
+    }
+}
+
+function viewUploadedPictures() {
+	if (href_url) {
+	    // Get HTML that lists all pictures on server using XHR	
+		var xmlhttp = new XMLHttpRequest();
+		// Callback function when XMLHttpRequest is ready
+		xmlhttp.onreadystatechange=function(){
+			if(xmlhttp.readyState === 4){
+	        // HTML is returned, which has pictures to display
+				if (xmlhttp.status === 200) {
+					data = xmlhttp.responseText;
+					$('#build_profile .ui-collapsible-content h3').next('fieldset').remove();
+					$('#build_profile .ui-collapsible-content h3').append(data).trigger('create');
+				}
+				// If error
+				else {
+					$('#error_alert_content').html('קרתה תקלה, אנא נסו שוב מאוחר יותר.');
+					$('#lnkDialog').click();
+				}
+			}
+		};
+		xmlhttp.open("GET", href_url , true);
+		xmlhttp.send();       	
+    }	
+}
+
+function get_job_description(job_id, $this) {
+	loading('show');
+	var action = 'get_job_description';
+	var parameters = {'job_id' : job_id};	
+	var json_param = JSON.stringify(parameters);
+	var req = new XMLHttpRequest(); 
+	req.open("POST", href_url, true);
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");;
+	req.onreadystatechange = function() {
+		if (req.readyState == 4) {
+			if (req.status == 200 || req.status == 0) {
+				var data = JSON.parse(req.responseText);
+				if(data.success) {
+					$this.css({'opacity': '0.7', 'cursor': 'default'});
+					$this.append('<div style="text-align: center;color: red;">הוגשה מועמדות</div>');
+				}
+				else {
+					$('#error_alert_content').html('לא היה ניתן להגיש מועמדות למשרה. אנא נסו שנית.');
+					$('#lnkDialog').click();
+				}
+				loading('hide');
+			}
+		}
+	};	
+	req.send("action=" + action + "&parameters=" + json_param);
+}
+
 function apply_to_job(job_id, job_title, $this) {
 	loading('show');
 	var action = 'apply_to_job';
@@ -402,6 +519,7 @@ function apply_to_job(job_id, job_title, $this) {
 				var data = JSON.parse(req.responseText);
 				if(data.success) {
 					$this.css({'opacity': '0.7', 'cursor': 'default'});
+					$this.find('button').hide();
 					$this.append('<div style="text-align: center;color: red;">הוגשה מועמדות</div>');
 				}
 				else {
@@ -661,30 +779,48 @@ function get_jobs(override) {
 				data = JSON.parse(req.responseText);
 				if(data.success) {
 					if(override) {
-						$('#test').animate({'margin-top': min_margin + 'px'}, 300);
+						$('#jobs_container').animate({'top': 0}, 300);
 						$('.incomplete').hide();
 						$('.job_result').remove();
 						$('.pullDownIcon').css('opacity', '1');
 					}
 					
-					$('#jobs_container').append(data.jobs);
+					$('#jobs_container').append(data.jobs).trigger('create');
 					
 					if(data.incomplete) {
 						$('.incomplete').show();
 					}
 					
 					// Pull Down to Refresh
-					top_limit = $('#jobs_container').position().top;
+					if (top_limit == null) {
+						top_limit = $('#jobs_container').position().top;
+					}
 					$('#jobs_container').draggable({
 						axis: "y",
 						containment: [0, top_limit],
-						start: function() {
+						start: function(ev, ui) {
 						},
-						drag: function() {
-							
+						drag: function(ev, ui) {
+							if($(this).position().top - top_limit > 60) {
+								$('#test #loading_text').html('שחררו לרענן משרות...');
+								$('#test').addClass('flip');
+							} else {
+								$('#test #loading_text').html('משכו למטה לרענון משרות...');
+								$('#test').removeClass('flip');
+							}
 						},
 						stop: function() {
-							$(this).animate({'top': 0}, 100);
+							if($(this).position().top - top_limit > 60) {
+								$('#test #loading_text').html('מרענן משרות...');
+								$('#test').removeClass('flip');
+								$('.pullDownIcon').css('opacity', '0');
+								get_jobs(true);
+								$(this).animate({'top': top_limit + "px"}, 200);
+							} else {
+								$('#test #loading_text').html('משכו למטה לרענון משרות...');
+								$('#test').removeClass('flip');
+								$(this).animate({'top': 0}, 200);
+							}
 						}
 					});
 				}

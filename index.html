@@ -248,15 +248,15 @@
 			<h1></h1>
 			<a href="#" class="logout">התנתק</a>
 			<a href="#profile_page" data-position="right"  data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true" ></a>
-		</div>		
-		<div id="test">
-			<div>
-				<span class="pullDownIcon"></span>
-				<span id="loading_text">משכו למטה לרענון משרות...</span>
-			</div>
 		</div>
-		<div data-role="content" style="padding-top:7px; overflow:hidden">
+		<div data-role="content" style="padding-top:0; overflow:hidden">
 			<div id="jobs_container">
+				<div id="test">
+					<div>
+						<span class="pullDownIcon"></span>
+						<span id="loading_text">משכו למטה לרענון משרות...</span>
+					</div>
+				</div>
 				<div class="incomplete">שימו לב: כדי לראות את התוצאות המתאימות ביותר, יש להשלים את הפרופיל</div>
 			</div>
 		</div>		
@@ -1915,8 +1915,12 @@
 				</div>
 				<div id="build_profile" style="text-align: center" data-role="collapsible" data-collapsed="false">
 					<h3>בניית פרופיל</h3>
-					<!--iframe frameborder="0" style="width:100%; height:150px" name="gallery_form" id="gallery_form" src="gallery_form.html">
-					</iframe-->
+					<fieldset data-role="controlgroup">
+						<button onclick="takePicture();">צילום תמונה</button>
+						<button onclick="selectPicture();">בחירת תמונה מגלרייה</button>
+						<button onclick="uploadPicture();">העלאת תמונה</button>
+						<img style="width:120px;visibility:hidden;display:none;" id="camera_image" src="" />
+					</fieldset>
 				</div>
 			</div>
 			<button id="submit_profile">שמירה</button>
