@@ -403,6 +403,7 @@ function takePicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = uri;
+			alert(uri); // DELETE AFTERWARDS
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
@@ -419,7 +420,6 @@ function selectPicture() {
 			img.style.display = "block";
 			img.src = uri;
 			alert(uri); // DELETE AFTERWARDS
-			document.getElementById('camera_status').innerHTML = "Success";
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
@@ -439,17 +439,19 @@ function uploadPicture() {
 	}
 
 	if (href_url) {
+		alert(href_url); // DELETE
 		// Specify transfer options
 		var options = new FileUploadOptions();
 		options.fileKey="file";
 		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 		options.mimeType="image/jpeg";
 		options.chunkedMode = false;
-
+		alert(options.mimeType); // DELETE
 		// Transfer picture to server
+		loading('show');
 		var ft = new FileTransfer();
-		ft.upload(imageURI, server, function(r) {
-			viewUploadedPictures();            	
+		ft.upload(imageURI, href_url, function(r) {
+			viewUploadedPictures();
 		}, function(error) {
 			$('#error_alert_content').html('לא היה ניתן להגיש מועמדות למשרה. אנא נסו שנית.');
 			$('#lnkDialog').click();
@@ -475,6 +477,7 @@ function viewUploadedPictures() {
 					$('#error_alert_content').html('קרתה תקלה, אנא נסו שוב מאוחר יותר.');
 					$('#lnkDialog').click();
 				}
+				loading('hide');
 			}
 		};
 		xmlhttp.open("GET", href_url , true);
