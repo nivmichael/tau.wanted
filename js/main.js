@@ -445,7 +445,7 @@ function uploadPicture() {
 		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 		options.mimeType="image/jpeg";
 		options.chunkedMode = true;
-		
+		alert(localStorage.logged_in); //DELETE LATER
 		var params = new Object();
 		params.hash_verify = localStorage.logged_in;
 				
@@ -746,6 +746,7 @@ function user_login() {
 }
 
 function verify_user_logged_in() {
+	alert(localStorage.logged_in);
 	var action = 'verify_user_logged_in';
 	var parameters = {'hash' : localStorage.logged_in};	
 	var json_param = JSON.stringify(parameters);
