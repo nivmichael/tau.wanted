@@ -11,6 +11,8 @@ var new_margin = min_margin;
 var top_limit = null;
 var change_limit;
 
+
+
 /*
 
 var myScroll, spullDownEl, pullDownOffset;
@@ -169,6 +171,7 @@ $('#jobs_feed').on("pagebeforecreate", function() {
 });
 
 $('#jobs_feed').on("pagebeforeshow", function() {
+	alert($.mobile.activePage[0].baseURI);
 	loading('show');
 	if(!localStorage.logged_in) {
 		$(this).hide();
