@@ -43,44 +43,48 @@
 	<script src="facebook-js-sdk.js"></script>
 </head>
 <body style="direction:rtl">
-	
-	<div id="fb-root"></div>
 	<script>
 		document.addEventListener('deviceready', function() {
-		  try {
-		  FB.init({ appId: "238210269607427", nativeInterface: CDV.FB, useCachedDialogs: false });
-		  } catch (e) {
-		  }
+			  try {
+				  FB.init({ appId: "238210269607427", nativeInterface: CDV.FB, useCachedDialogs: false });
+			  } catch (e) {
+			  }
 		  }, false);
  		
  		function getLoginStatus() {
-                FB.getLoginStatus(function(response) {
-                                  if (response.status == 'connected') {
-                                  return true;
-                                  } else {
-                                  return false;
-                                  }
-                                  });
-            }
+            FB.getLoginStatus(function(response) {
+		              if (response.status == 'connected') {
+		             	 return true;
+		              } else {
+		              	return false;
+		              }
+                  });
+        }
             
-            function logout() {
-                FB.logout(function(response) {
-                          // SUCCESS
-                          });
-            }
+        function logout() {
+            FB.logout(function(response) {
+          // SUCCESS
+          });
+        }
             
-            function login() {
-                FB.login(
-                         function(response) {
-                         if (response.session) {
-                         // SUCCESS
-                         } else {
-                         //FAILURE
-                         }
-                         },
-                         { scope: "email" }
-                         );
-            }
+        function login() {
+            FB.login(
+	            function(response) {
+		            if (response.session) {
+		            	// SUCCESS
+		            } else {
+			            //FAILURE
+		            }
+	            },
+				{ scope: "email" }
+			);
+        }
+        
+		function testAPI() {
+			FB.api('/me', function(response) {
+				alert(response.toString());
+			});
+		 }
 	</script>
 	
 	<div data-role="page" id="Login_Page">
