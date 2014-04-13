@@ -779,7 +779,6 @@ function verify_user_logged_in() {
 }
 
 function get_jobs(override) {
-	testAPI();
 	loading('show');
 	var action = 'get_jobs';
 	var parameters = {'user_id' : user_id, 'override': override};
