@@ -171,7 +171,6 @@ $('#jobs_feed').on("pagebeforecreate", function() {
 });
 
 $('#jobs_feed').on("pagebeforeshow", function() {
-	alert($.mobile.activePage[0].baseURI);
 	loading('show');
 	if(!localStorage.logged_in) {
 		$(this).hide();
