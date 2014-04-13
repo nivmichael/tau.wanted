@@ -471,12 +471,10 @@ function viewUploadedPictures() {
 			if(xmlhttp.readyState === 4){
 				if (xmlhttp.status === 200) {
 					data = xmlhttp.responseText;
-					alert(data);
 					$('#build_profile .ui-collapsible-content h3').next('fieldset').andSelf().remove();
 					$('#build_profile .ui-collapsible-content').prepend(data).trigger('create');
 				}
 				else {
-					alert('לא היה ניתן להציג תמונות');
 					$('#error_alert_content').html('קרתה תקלה, אנא נסו שוב מאוחר יותר.');
 					$('#lnkDialog').click();
 				}
