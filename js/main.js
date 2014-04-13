@@ -465,8 +465,8 @@ function uploadPicture() {
 function viewUploadedPictures() {
 	if (href_url) {
 		var xmlhttp = new XMLHttpRequest();
-		req.open("POST", href_url, true);
-		req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xmlhttp.open("POST", href_url, true);
+		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		xmlhttp.onreadystatechange=function(){
 			if(xmlhttp.readyState === 4){
 				if (xmlhttp.status === 200) {
