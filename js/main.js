@@ -474,7 +474,7 @@ function viewUploadedPictures() {
 					data = xmlhttp.responseText;
 					alert(data);
 					$('#build_profile .ui-collapsible-content h3').andSelf().next('fieldset :not(#buttons_fieldset)').remove();
-					$('#build_profile .ui-collapsible-content h3').append(data).trigger('create');
+					$('#build_profile .ui-collapsible-content').prepend(data).trigger('create');
 				}
 				// If error
 				else {
