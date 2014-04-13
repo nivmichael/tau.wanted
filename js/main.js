@@ -473,7 +473,7 @@ function viewUploadedPictures() {
 				if (xmlhttp.status === 200) {
 					data = xmlhttp.responseText;
 					alert(data);
-					$('#build_profile .ui-collapsible-content h3').next('fieldset').remove();
+					$('#build_profile .ui-collapsible-content h3').andSelf().next('fieldset :not(#buttons_fieldset)').remove();
 					$('#build_profile .ui-collapsible-content h3').append(data).trigger('create');
 				}
 				// If error
