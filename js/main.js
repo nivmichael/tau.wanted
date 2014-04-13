@@ -466,6 +466,8 @@ function viewUploadedPictures() {
 	if (href_url) {
 	    // Get HTML that lists all pictures on server using XHR	
 		var xmlhttp = new XMLHttpRequest();
+		req.open("POST", href_url, true);
+		req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		// Callback function when XMLHttpRequest is ready
 		xmlhttp.onreadystatechange=function(){
 			if(xmlhttp.readyState === 4){
@@ -478,15 +480,14 @@ function viewUploadedPictures() {
 				}
 				// If error
 				else {
-					alert('לא היה ניתן להציג  תמונות');
+					alert('לא היה ניתן להציג תמונות');
 					$('#error_alert_content').html('קרתה תקלה, אנא נסו שוב מאוחר יותר.');
 					$('#lnkDialog').click();
 				}
 				loading('hide');
 			}
 		};
-		xmlhttp.open("GET", href_url + "?user_id=" + user_id , true);
-		xmlhttp.send();       	
+		xmlhttp.send("get_gallery=1&user_id=" + user_id);       	
     }	
 }
 
@@ -497,7 +498,7 @@ function get_job_description(job_id, $this) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");;
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
@@ -524,7 +525,7 @@ function apply_to_job(job_id, job_title, $this) {
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
-	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");;
+	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
