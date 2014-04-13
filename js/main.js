@@ -464,21 +464,17 @@ function uploadPicture() {
 
 function viewUploadedPictures() {
 	if (href_url) {
-	    // Get HTML that lists all pictures on server using XHR	
 		var xmlhttp = new XMLHttpRequest();
 		req.open("POST", href_url, true);
 		req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		// Callback function when XMLHttpRequest is ready
 		xmlhttp.onreadystatechange=function(){
 			if(xmlhttp.readyState === 4){
-	        // HTML is returned, which has pictures to display
 				if (xmlhttp.status === 200) {
 					data = xmlhttp.responseText;
 					alert(data);
 					$('#build_profile .ui-collapsible-content h3').andSelf().next('fieldset :not(#buttons_fieldset)').remove();
 					$('#build_profile .ui-collapsible-content').prepend(data).trigger('create');
 				}
-				// If error
 				else {
 					alert('לא היה ניתן להציג תמונות');
 					$('#error_alert_content').html('קרתה תקלה, אנא נסו שוב מאוחר יותר.');
