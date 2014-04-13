@@ -403,7 +403,6 @@ function takePicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = uri;
-			alert(uri); // DELETE AFTERWARDS
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
@@ -419,7 +418,6 @@ function selectPicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = uri;
-			alert(uri); // DELETE AFTERWARDS
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
@@ -445,10 +443,9 @@ function uploadPicture() {
 		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
 		options.mimeType="image/jpeg";
 		options.chunkedMode = true;
-		alert(localStorage.logged_in); //DELETE LATER
+
 		var params = new Object();
 		params.hash_verify = localStorage.logged_in;
-				
 		options.params = params;
 
 		// Transfer picture to server
@@ -475,11 +472,13 @@ function viewUploadedPictures() {
 	        // HTML is returned, which has pictures to display
 				if (xmlhttp.status === 200) {
 					data = xmlhttp.responseText;
+					alert(data);
 					$('#build_profile .ui-collapsible-content h3').next('fieldset').remove();
 					$('#build_profile .ui-collapsible-content h3').append(data).trigger('create');
 				}
 				// If error
 				else {
+					alert('לא היה ניתן להציג  תמונות');
 					$('#error_alert_content').html('קרתה תקלה, אנא נסו שוב מאוחר יותר.');
 					$('#lnkDialog').click();
 				}
@@ -746,7 +745,6 @@ function user_login() {
 }
 
 function verify_user_logged_in() {
-	alert(localStorage.logged_in);
 	var action = 'verify_user_logged_in';
 	var parameters = {'hash' : localStorage.logged_in};	
 	var json_param = JSON.stringify(parameters);
@@ -919,7 +917,7 @@ function get_user() {
 				    }
 				    $('#next_step_profession').prev('span').html($('#next_step_profession>option:selected').text());
 				    
-				    // Show existing gallery photos before Upload Iframe
+				    // Show existing gallery photos before Upload Form
 			    	$(details['gallery']).prependTo('#build_profile .ui-collapsible-content').trigger('create');
 				    
 				    // Self Evaluation handler, only if set.
