@@ -360,9 +360,13 @@ $('#submit_profile').click(function(e){
 // Misc.
 $('.logout').on('click', function(e) {
 	$.mobile.loading('show');
+	var check_fb_connected = getLoginStatus();
 	localStorage.clear();
 	user_id = null;
 	setTimeout(function(){
+		if(check_fb_connected) {
+			logout();
+		}
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
 		location.reload(1);
 	}, 2000);

@@ -1,94 +1,70 @@
-<!DOCTYPE html>
-<html>
-	<head>
-    </head>
-	<body>
-		<button onclick="login()">Login</button>
-		<button onclick="me()">Me</button>
-		<!--<button onclick="getSession()">Get session</button>-->
-		<button onclick="getLoginStatus()">Get login</button>
-		<button onclick="logout()">Logout</button>
-		<button onclick="facebookWallPost()">facebookWallPost</button>
-		<button onclick="publishStoryFriend()">friendstory</button>
-        
-        <div id="data">loading ...</div>
-        
-        <!--<script src="http://localhost:8080/target/target-script-min.js#anonymous"></script>-->
-        <div id="fb-root"></div>
-        <!-- cordova -->
-		<script src="cordova.js"></script>
-	    <!-- cordova facebook plugin -->
-		<script src="cdv-plugin-fb-connect.js"></script>
-	    <!-- facebook js sdk -->
-		<script src="facebook-js-sdk.js"></script>
-        
-		<script>
-             <!-- These are the notifications that are displayed to the user through pop-ups if the above JS files does not exist in the same directory-->
-            if ((typeof cordova == 'undefined') && (typeof Cordova == 'undefined')) alert('Cordova variable does not exist. Check that you have included cordova.js correctly');
-            if (typeof CDV == 'undefined') alert('CDV variable does not exist. Check that you have included cdv-plugin-fb-connect.js correctly');
-            if (typeof FB == 'undefined') alert('FB variable does not exist. Check that you have included the Facebook JS SDK file.');
-            
-            FB.Event.subscribe('auth.login', function(response) {
-                               alert('auth.login event');
-                               });
-            
-            FB.Event.subscribe('auth.logout', function(response) {
-                               alert('auth.logout event');
-                               });
-            
-            FB.Event.subscribe('auth.sessionChange', function(response) {
-                               alert('auth.sessionChange event');
-                               });
-            
-            FB.Event.subscribe('auth.statusChange', function(response) {
-                               alert('auth.statusChange event');
-                               });
-            
-            /*function getSession() {
-                alert("session: " + JSON.stringify(FB.getSession()));
-            }
-            */
-            function getLoginStatus() {
+﻿<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--><html class="no-js"><!--<![endif]-->
+<head>	
+	<title>AcadeMe TAU</title>
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta http-equiv="cleartype" content="on">
+	
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
+	<link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
+	
+	<!-- Tile icon for Win8 (144x144 + tile color) -->
+	<meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
+	<meta name="msapplication-TileColor" content="#222222">
+		
+	<!-- For iOS web apps. Delete if not needed. https://github.com/h5bp/mobile-boilerplate/issues/94 -->
+	<!--
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="">
+	-->
+	
+	<!-- This script prevents links from opening in Mobile Safari. https://gist.github.com/1042026 -->
+	<!--
+	<script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
+	-->
+	
+	<link rel="stylesheet" href="css/tau_app_version1.min.css" />
+	<link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />	
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.1.min.css">
+	<link rel="stylesheet" href="css/custom_styles.css">
+	
+	<script type="text/javascript" src="cordova.js"></script>
+	<script src="cdv-plugin-fb-connect.js"></script>
+	<script src="facebook-js-sdk.js"></script>
+</head>
+<body style="direction:rtl">
+	
+	<div id="fb-root"></div>
+	<script>
+ 		FB.init({
+ 			appId: "1401924913416178",
+ 			nativeInterface: CDV.FB,
+ 			useCachedDialogs: false
+ 		});
+ 		
+ 		function getLoginStatus() {
                 FB.getLoginStatus(function(response) {
                                   if (response.status == 'connected') {
-                                  alert('logged in');
+                                  return true;
                                   } else {
-                                  alert('not logged in');
+                                  return false;
                                   }
                                   });
-            }
-            var friendIDs = [];
-			var fdata;
-            function me() {
-                FB.api('/me/friends', { fields: 'id, name, picture' },  function(response) {
-                       if (response.error) {
-                       alert(JSON.stringify(response.error));
-                       } else {
-                       var data = document.getElementById('data');
-					   fdata=response.data;
-					   console.log("fdata: "+fdata);
-                       response.data.forEach(function(item) {
-                                             var d = document.createElement('div');
-                                             d.innerHTML = "<img src="+item.picture+"/>"+item.name;
-                                             data.appendChild(d);
-                                             });
-                       }
-					var friends = response.data;
-					console.log(friends.length); 
-					for (var k = 0; k < friends.length && k < 200; k++) {
-				        var friend = friends[k];
-				        var index = 1;
-
-				        friendIDs[k] = friend.id;
-				        //friendsInfo[k] = friend;
-					}
-					console.log("friendId's: "+friendIDs);
-                       });
             }
             
             function logout() {
                 FB.logout(function(response) {
-                          alert('logged out');
+                          // SUCCESS
                           });
             }
             
@@ -96,62 +72,1909 @@
                 FB.login(
                          function(response) {
                          if (response.session) {
-                         alert('logged in');
+                         // SUCCESS
                          } else {
-                         alert('not logged in');
+                         //FAILURE
                          }
                          },
                          { scope: "email" }
                          );
             }
-			
-			
-			function facebookWallPost() {
-			    console.log('Debug 1');
-				var params = {
-				    method: 'feed',
-				    name: 'Facebook Dialogs',
-				    link: 'https://developers.facebook.com/docs/reference/dialogs/',
-				    picture: 'http://fbrell.com/f8.jpg',
-				    caption: 'Reference Documentation',
-				    description: 'Dialogs provide a simple, consistent interface for applications to interface with users.'
-				  };
-				console.log(params);
-			    FB.ui(params, function(obj) { console.log(obj);});
-			}
-            
-			function publishStoryFriend() {
-				randNum = Math.floor ( Math.random() * friendIDs.length ); 
-
-				var friendID = friendIDs[randNum];
-				if (friendID == undefined){
-					alert('please click the me button to get a list of friends first');
-				}else{
-			    	console.log("friend id: " + friendID );
-			        console.log('Opening a dialog for friendID: ', friendID);
-			        var params = {
-			        	method: 'feed',
-			            to: friendID.toString(),
-			            name: 'Facebook Dialogs',
-			            link: 'https://developers.facebook.com/docs/reference/dialogs/',
-			            picture: 'http://fbrell.com/f8.jpg',
-			            caption: 'Reference Documentation',
-			            description: 'Dialogs provide a simple, consistent interface for applications to interface with users.'
-			     	};
-					FB.ui(params, function(obj) { console.log(obj);});
-			    }
-			}
-            
-            document.addEventListener('deviceready', function() {
-                                      try {
-                                      alert('Device is ready! Make sure you set your app_id below this alert.');
-                                      FB.init({ appId: "1401924913416178", nativeInterface: CDV.FB, useCachedDialogs: false });
-                                      document.getElementById('data').innerHTML = "";
-                                      } catch (e) {
-                                      alert(e);
-                                      }
-                                      }, false);
-            </script>
-        <div id="log"></div>
-	</body>
+	</script>
+	
+	<div data-role="page" id="Login_Page">
+		<div data-role="content" id="login_page">	
+			<form autocomplete="off" data-ajax="true" method="post" name="login_form" id="login_form">    
+				<div class="login_container">
+					<div class="input_placeholder">דוא"ל</div>
+					<input id="login_email" type="text" name="login_email" />	
+				</div>
+				<div class="separator">&nbsp;</div>
+				<div class="login_container">
+					<div class="input_placeholder">סיסמה</div>
+					<input id="login_password" type="password" name="login_password" />
+				</div>				
+				<div class="error" id="login_error">הפרטים אינם נכונים, אנא נסו שנית</div>
+				<div class="submit_container">
+					<input type="submit" value="התחבר" class="login_enter" />
+				</div>
+			</form>			
+			<button id="register" onclick="location.href='#registration_page'">משתמש חדש</button>
+			<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+			<button id="fb_login" onclick="login();">כניסה עם FaceBook</button>
+		</div>
+	</div>
+	
+	<div data-role="dialog" id="error_alert">
+		<div class="header_normal" data-role="header"><h2>שגיאה</h2></div>
+		<div data-role="content" id="error_alert_content"></div>
+		<div data-role="footer" style="text-align: center">
+			<a data-rel="back" data-role="button">אישור</a>
+		</div>
+	</div>
+	<a id='lnkDialog' href="#error_alert" data-rel="dialog" data-transition="none" style='display:none;'></a>
+	
+	<div data-role="dialog" id="choose_dialog">
+		<div class="header_normal" data-role="header"><h2></h2></div>
+		<div data-role="content" id="choose_content"></div>
+		<div data-role="footer" style="text-align: center">
+			<a id="confirm_choise" data-rel="back" data-role="button">אישור</a>
+		</div>
+	</div>
+	<a id='lnkChooseDialog' href="#choose_dialog" data-rel="dialog" data-transition="none" style='display:none;'></a>
+	
+	<div data-role="page" id="registration_page">		
+		<div data-role="content" id="register_page_content">	
+			<form autocomplete="off" data-ajax="true" method="post" name="registration_form" id="registration_form">    
+				<div class="register_container">
+					<div class="input_placeholder">שם פרטי</div>
+					<input id="register_first_name" type="text" name="register_first_name" />	
+				</div>
+				<div class="register_container">
+					<div class="input_placeholder">שם משפחה</div>
+					<input id="register_last_name" type="text" name="register_last_name" />	
+				</div>
+				<div class="register_container">
+					<div class="input_placeholder">טלפון נייד</div>
+					<input id="register_phone" type="text" name="register_phone" />	
+				</div>
+				<div class="register_container">
+					<div class="input_placeholder">אימייל</div>
+					<input id="register_email" type="text" name="register_email" />	
+				</div>
+				<div class="register_container">
+					<div class="input_placeholder">סיסמה</div>
+					<input id="register_password" type="password" name="register_password" />
+				</div>
+				<div class="register_container">
+					<div class="input_placeholder">אימות סיסמה</div>
+					<input id="register_password_confirm" type="password" name="register_password_confirm" />
+				</div>
+				<select name="register_gender" id="register_gender">
+					<option selected="selected">מין</option>
+					<option value="זכר">זכר</option>
+					<option value="נקבה">נקבה</option>
+				</select>
+				<fieldset id="date_of_birth" data-type="horizontal" data-role="controlgroup">					
+					 <select name="register_birth_day" id="register_birth_day">
+			            <option value="1">01</option>
+			            <option value="2">02</option>
+			            <option value="3">03</option>
+			            <option value="4">04</option>
+			            <option value="5">05</option>
+			            <option value="6">06</option>
+			            <option value="7">07</option>
+			            <option value="8">08</option>
+			            <option value="9">09</option>
+			            <option value="10">10</option>
+			            <option value="11">11</option>
+			            <option value="12">12</option>
+			            <option value="13">13</option>
+			            <option value="14">14</option>
+			            <option value="15">15</option>
+			            <option value="16">16</option>
+			            <option value="17">17</option>
+			            <option value="18">18</option>
+			            <option value="19">19</option>
+			            <option value="20">20</option>
+			            <option value="21">21</option>
+			            <option value="22">22</option>
+			            <option value="23">23</option>
+			            <option value="24">24</option>
+			            <option value="25">25</option>
+			            <option value="26">26</option>
+			            <option value="27">27</option>
+			            <option value="28">28</option>
+			            <option value="29">29</option>
+			            <option value="30">30</option>
+			            <option value="31">31</option>
+			        </select>
+			        <select name="register_birth_month" id="register_birth_month">
+			            <option value="1">01</option>
+			            <option value="2">02</option>
+			            <option value="3">03</option>
+			            <option value="4">04</option>
+			            <option value="5">05</option>
+			            <option value="6">06</option>
+			            <option value="7">07</option>
+			            <option value="8">08</option>
+			            <option value="9">09</option>
+			            <option value="10">10</option>
+			            <option value="11">11</option>
+			            <option value="12">12</option>
+			        </select>			        			   
+			        <select name="register_birth_year" id="register_birth_year">			            
+						<option value="1999">1999</option>
+						<option value="1998">1998</option>
+						<option value="1997">1997</option>
+						<option value="1996">1996</option>
+						<option value="1995">1995</option>
+						<option value="1994">1994</option>
+						<option value="1993">1993</option>
+						<option value="1992">1992</option>
+						<option value="1991">1991</option>
+						<option value="1990">1990</option>
+						<option value="1989">1989</option>
+						<option value="1988">1988</option>
+						<option value="1987">1987</option>
+						<option value="1986">1986</option>
+						<option value="1985">1985</option>
+						<option value="1984">1984</option>
+						<option value="1983">1983</option>
+						<option value="1982">1982</option>
+						<option value="1981">1981</option>
+						<option value="1980">1980</option>
+						<option value="1979">1979</option>
+						<option value="1978">1978</option>
+						<option value="1977">1977</option>
+						<option value="1976">1976</option>
+						<option value="1975">1975</option>
+						<option value="1974">1974</option>
+						<option value="1973">1973</option>
+						<option value="1972">1972</option>
+						<option value="1971">1971</option>
+						<option value="1970">1970</option>
+						<option value="1969">1969</option>
+						<option value="1968">1968</option>
+						<option value="1967">1967</option>
+						<option value="1966">1966</option>
+						<option value="1965">1965</option>
+						<option value="1964">1964</option>
+						<option value="1963">1963</option>
+						<option value="1962">1962</option>
+						<option value="1961">1961</option>
+						<option value="1960">1960</option>
+						<option value="1959">1959</option>
+						<option value="1958">1958</option>
+						<option value="1957">1957</option>
+						<option value="1956">1956</option>
+						<option value="1955">1955</option>
+						<option value="1954">1954</option>
+						<option value="1953">1953</option>
+						<option value="1952">1952</option>
+						<option value="1951">1951</option>
+						<option value="1950">1950</option>
+						<option value="1949">1949</option>
+						<option value="1948">1948</option>
+						<option value="1947">1947</option>
+						<option value="1946">1946</option>
+						<option value="1945">1945</option>
+						<option value="1944">1944</option>
+			        </select>		        
+			    </fieldset>
+			    <select name="register_family_status" id="register_family_status">
+					<option selected="selected">מצב משפחתי</option>
+					<option value="רווק/ה">רווק/ה</option>
+					<option value="נשוי/נשואה">נשוי/נשואה</option>
+					<option value="גרושה/ה">גרושה/ה</option>
+					<option value="אלמן/ה">אלמן/ה</option>
+				</select>
+				<select name="register_education_status" id="register_education_status">
+					<option selected="selected">סטטוס לימודי</option>
+					<option value="סטודנט">סטודנט</option>
+					<option value="בוגר">בוגר</option>
+				</select>
+				<select id="register_city" class="cities" name="register_city">
+					<option>עיר מגורים</option>
+				</select>
+				<div class="separator">&nbsp;</div>
+				<div class="submit_container">
+					<input type="submit" value="סיום הרשמה" />					
+				</div>
+			</form>			
+		</div>
+	</div>
+	
+	<div data-role="page" id="jobs_feed">
+		<div class="header_normal" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a href="#profile_page" data-position="right"  data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true" ></a>
+		</div>
+		<div data-role="content" style="padding-top:0; overflow:hidden">
+			<div id="jobs_container">
+				<div id="test">
+					<div>
+						<span class="pullDownIcon"></span>
+						<span id="loading_text">משכו למטה לרענון משרות...</span>
+					</div>
+				</div>
+				<div class="incomplete">שימו לב: כדי לראות את התוצאות המתאימות ביותר, יש להשלים את הפרופיל</div>
+			</div>
+		</div>		
+	</div>
+	
+	<div data-role="page" id="profile_page">
+		<div class="header_normal" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a href="#jobs_feed" data-position="right"  data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true" ></a>
+		</div>
+		<form autocomplete="off" data-ajax="true" method="post" name="profile_form" id="profile_form">
+		<div data-role="content" id="profile_container">
+			<div data-role="collapsible-set" id="main_container">
+				<div data-role="collapsible">
+					<h3>פרטיים אישיים</h3>
+					<div class="profile_container">
+						<div class="input_placeholder">שם פרטי</div>
+						<input id="first_name" type="text" name="first_name" />	
+					</div>
+					<div class="profile_container">
+						<div class="input_placeholder">שם משפחה</div>
+						<input id="last_name" type="text" name="last_name" />	
+					</div>
+					<div class="profile_container">
+						<div class="input_placeholder">טלפון נייד</div>
+						<input id="phone_1" type="text" name="phone_1" />	
+					</div>
+					<div class="profile_container">
+						<div class="input_placeholder">אימייל</div>
+						<input id="email" type="text" name="email" />	
+					</div>
+					<div class="profile_container">
+						<div class="input_placeholder">סיסמה</div>
+						<input id="new_password" type="password" name="new_password" />
+					</div>
+					<div class="profile_container">
+						<div class="input_placeholder">אימות סיסמה</div>
+						<input id="new_password_confirm" type="password" name="new_password_confirm" />
+					</div>
+					<select name="general_sex" id="general_sex">
+						<option>מין</option>
+						<option value="זכר">זכר</option>
+						<option value="נקבה">נקבה</option>
+					</select>
+					<fieldset id="profile_date_of_birth" data-type="horizontal" data-role="controlgroup">					
+						 <select name="general_birth_day" id="general_birth_day">
+						 	<option>יום</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				            <option value="13">13</option>
+				            <option value="14">14</option>
+				            <option value="15">15</option>
+				            <option value="16">16</option>
+				            <option value="17">17</option>
+				            <option value="18">18</option>
+				            <option value="19">19</option>
+				            <option value="20">20</option>
+				            <option value="21">21</option>
+				            <option value="22">22</option>
+				            <option value="23">23</option>
+				            <option value="24">24</option>
+				            <option value="25">25</option>
+				            <option value="26">26</option>
+				            <option value="27">27</option>
+				            <option value="28">28</option>
+				            <option value="29">29</option>
+				            <option value="30">30</option>
+				            <option value="31">31</option>
+				        </select>
+				        <select name="general_birth_month" id="general_birth_month">
+				        	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="general_birth_year" id="general_birth_year">
+				        	<option>שנה</option>			            
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <select name="general_family_status" id="general_family_status">
+						<option>מצב משפחתי</option>
+						<option value="רווק/ה">רווק/ה</option>
+						<option value="נשוי/נשואה">נשוי/נשואה</option>
+						<option value="גרושה/ה">גרושה/ה</option>
+						<option value="אלמן/ה">אלמן/ה</option>
+					</select>
+					<select name="general_education_status" id="general_education_status">
+						<option>סטטוס לימודי</option>
+						<option value="סטודנט">סטודנט</option>
+						<option value="בוגר">בוגר</option>
+					</select>
+					<select id="city" class="cities" name="city">
+						<option>עיר מגורים</option>
+					</select>
+				</div>				
+				<div data-role="collapsible" id="education">
+					<h3>השכלה</h3>
+					<div id="education_0_container">
+					<fieldset data-role="controlgroup">
+					<select name="education_0_degree" id="education_0_degree">
+						<option>תעודה/תואר</option>
+						<option value="סטודנט תואר ראשון">סטודנט תואר ראשון</option> 
+                        <option value="סטודנט תואר שני" >סטודנט תואר שני</option> 
+                        <option value="סטודנט תואר שלישי" >סטודנט תואר שלישי</option> 
+                        <option value="בוגר תואר ראשון" >בוגר תואר ראשון</option> 
+                        <option value="בוגר תואר שני" >בוגר תואר שני</option> 
+                        <option value="בוגר תואר שלישי" >בוגר תואר שלישי</option> 
+					</select>
+					<select name="education_0_institute" id="education_0_institute">
+						<option>מוסד</option>
+						<option value="אוהלו- קצרין" >אוהלו- קצרין</option> 
+                        <option value="אוניברסיטת בן גוריון- באר שבע" >אוניברסיטת בן גוריון- באר שבע</option> 
+                        <option value="אוניברסיטת בר אילן" >אוניברסיטת בר אילן</option> 
+                        <option value="אוניברסיטת חיפה" >אוניברסיטת חיפה</option> 
+                        <option value="אוניברסיטת תל אביב" >אוניברסיטת תל אביב</option> 
+                        <option value="אורות ישראל- מכללה אקדמית לחינוך" >אורות ישראל- מכללה אקדמית לחינוך</option> 
+                        <option value="אפקה- מכללה אקדמית להנדסה בתל אביב" >אפקה- מכללה אקדמית להנדסה בתל אביב</option> 
+                        <option value="בית ספר גבוה לטכנולוגיה בי-ם" >בית ספר גבוה לטכנולוגיה בי-ם</option> 
+                        <option value="בצלאל- י-ם" >בצלאל- י-ם</option> 
+                        <option value="האוניברסיטה העיברית בי-ם">האוניברסיטה העיברית בי-ם</option> 
+                        <option value="האוניברסיטה הפתוחה" >האוניברסיטה הפתוחה</option> 
+                        <option value="הטכניון" >הטכניון</option> 
+                        <option value="הקריה האקדמית אונו" >הקריה האקדמית אונו</option> 
+                        <option value="המכלל האקדמית נתניה" >המכלל האקדמית נתניה</option> 
+                        <option value="המכללה האקדמית אשקלון" >המכללה האקדמית אשקלון</option> 
+                        <option value="המכללה האקדמית בית ברל" >המכללה האקדמית בית ברל</option> 
+                        <option value="המכללה האקדמית גליל מערבי" >המכללה האקדמית גליל מערבי</option> 
+                        <option value="המכללה האקדמית כנרת בעמק הירדן" >המכללה האקדמית כנרת בעמק הירדן</option> 
+                        <option value="המכללה האקדמית להנדסה- סמי שמעון" >המכללה האקדמית להנדסה- סמי שמעון</option> 
+                        <option value="המכללה האקדמית להנדסה אורט ע&quot;ש ברואדה" >המכללה האקדמית להנדסה אורט ע"ש ברואדה</option> 
+                        <option value="המכללה האקדמית להנדסה י-ם" >המכללה האקדמית להנדסה י-ם</option> 
+                        <option value="המכללה האקדמית של תל אביב-יפו" >המכללה האקדמית של תל אביב-יפו</option> 
+                        <option value="המכללה למנהל" >המכללה למנהל</option> 
+                        <option value="המרכז הבניתחומי הרצליה" >המרכז הבניתחומי הרצליה</option> 
+                        <option value="טורו קולג'" >טורו קולג'</option> 
+                        <option value="המרכז האקדמי למשפט ועסקים רמת גן" >המרכז האקדמי למשפט ועסקים רמת גן</option> 
+                        <option value="מורשת יעקב" >מורשת יעקב</option> 
+                        <option value="מכון טכנולוגי חולון" >מכון טכנולוגי חולון</option> 
+                        <option value="מכון לב" >מכון לב</option> 
+                        <option value="מכללה אקדמית עמק יזרעאל" >מכללה אקדמית עמק יזרעאל</option> 
+                        <option value="מכללה אקדמית צפת" >מכללה אקדמית צפת</option> 
+                        <option value="מכללת אורנים" >מכללת אורנים</option> 
+                        <option value="מכללת הדסה י-ם" >מכללת הדסה י-ם</option> 
+                        <option value="מכללת וינגייט" >מכללת וינגייט</option> 
+                        <option value="מכללת ויצו להכשרת מורים" >מכללת ויצו להכשרת מורים</option> 
+                        <option value="מכללת יהודה ושומרון-אריאל" >מכללת יהודה ושומרון-אריאל</option> 
+                        <option value="מכללת לוינסקי לחינוך" >מכללת לוינסקי לחינוך</option> 
+                        <option value="מכללת ספיר" >מכללת ספיר</option> 
+                        <option value="מכללת רופין" >מכללת רופין</option> 
+                        <option value="מכללת שנקר" >מכללת שנקר</option> 
+                        <option value="מכללת שערי משפט" >מכללת שערי משפט</option> 
+                        <option value="מכללת תל חי" >מכללת תל חי</option> 
+                        <option value="מרכז אקדמי פרס" >מרכז אקדמי פרס</option> 
+                        <option value="סמינר הקיבוצים" >סמינר הקיבוצים</option> 
+                        <option value="אחר" >אחר</option>
+					</select>
+					 <select id="education_0_average" name="education_0_average">
+	                    <option>ציון ממוצע</option>
+	                    <option value="0-50" >0-50</option> 
+	                    <option value="51-60" >51-60</option> 
+	                    <option value="61-65" >61-65</option> 
+	                    <option value="66-70" >66-70</option> 
+	                    <option value="71-75" >71-75</option> 
+	                    <option value="76-80" >76-80</option> 
+	                    <option value="81-85" >81-85</option> 
+	                    <option value="86-90" >86-90</option> 
+	                    <option value="91-95" >91-95</option> 
+	                    <option value="96-100" >96-100</option> 
+	                </select>
+	                </fieldset>
+					<fieldset class="faculty_list" data-role="controlgroup">
+						<input class="checkbox_array" type="hidden" id="education_0_faculty" name="education_0_faculty" value="{}">
+						<a class="choose_button" data-role="button">בחירת חוגים</a>
+					</fieldset>
+					<fieldset class="small_date" id="education_0_start_date" data-type="horizontal" data-role="controlgroup">
+						<legend><b>תאריך תחילה</b></legend>				
+						 <select name="education_0_start_month" id="education_0_start_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="education_0_start_year" id="education_0_start_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <fieldset class="small_date" id="education_0_end_date" data-type="horizontal" data-role="controlgroup">
+				    	<legend><b>תאריך סיום</b></legend>					
+						 <select name="education_0_end_month" id="education_0_end_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="education_0_end_year" id="education_0_end_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <!--a href="#" class="remove_container">מחיקה</a>&nbsp;&nbsp;
+				    <a href="#" class="move_container_up">למעלה</a>&nbsp;&nbsp;
+				    <a href="#" class="move_container_down">למטה</a>&nbsp;&nbsp;-->
+				    </div>
+				    <div id="education_1_container" class="iteration_container">
+					<fieldset data-role="controlgroup">
+					<select name="education_1_degree" id="education_1_degree">
+						<option>תעודה/תואר</option>
+						<option value="סטודנט תואר ראשון">סטודנט תואר ראשון</option> 
+                        <option value="סטודנט תואר שני" >סטודנט תואר שני</option> 
+                        <option value="סטודנט תואר שלישי" >סטודנט תואר שלישי</option> 
+                        <option value="בוגר תואר ראשון" >בוגר תואר ראשון</option> 
+                        <option value="בוגר תואר שני" >בוגר תואר שני</option> 
+                        <option value="בוגר תואר שלישי" >בוגר תואר שלישי</option> 
+					</select>
+					<select name="education_1_institute" id="education_1_institute">
+						<option>מוסד</option>
+						<option value="אוהלו- קצרין" >אוהלו- קצרין</option> 
+                        <option value="אוניברסיטת בן גוריון- באר שבע" >אוניברסיטת בן גוריון- באר שבע</option> 
+                        <option value="אוניברסיטת בר אילן" >אוניברסיטת בר אילן</option> 
+                        <option value="אוניברסיטת חיפה" >אוניברסיטת חיפה</option> 
+                        <option value="אוניברסיטת תל אביב" >אוניברסיטת תל אביב</option> 
+                        <option value="אורות ישראל- מכללה אקדמית לחינוך" >אורות ישראל- מכללה אקדמית לחינוך</option> 
+                        <option value="אפקה- מכללה אקדמית להנדסה בתל אביב" >אפקה- מכללה אקדמית להנדסה בתל אביב</option> 
+                        <option value="בית ספר גבוה לטכנולוגיה בי-ם" >בית ספר גבוה לטכנולוגיה בי-ם</option> 
+                        <option value="בצלאל- י-ם" >בצלאל- י-ם</option> 
+                        <option value="האוניברסיטה העיברית בי-ם">האוניברסיטה העיברית בי-ם</option> 
+                        <option value="האוניברסיטה הפתוחה" >האוניברסיטה הפתוחה</option> 
+                        <option value="הטכניון" >הטכניון</option> 
+                        <option value="הקריה האקדמית אונו" >הקריה האקדמית אונו</option> 
+                        <option value="המכלל האקדמית נתניה" >המכלל האקדמית נתניה</option> 
+                        <option value="המכללה האקדמית אשקלון" >המכללה האקדמית אשקלון</option> 
+                        <option value="המכללה האקדמית בית ברל" >המכללה האקדמית בית ברל</option> 
+                        <option value="המכללה האקדמית גליל מערבי" >המכללה האקדמית גליל מערבי</option> 
+                        <option value="המכללה האקדמית כנרת בעמק הירדן" >המכללה האקדמית כנרת בעמק הירדן</option> 
+                        <option value="המכללה האקדמית להנדסה- סמי שמעון" >המכללה האקדמית להנדסה- סמי שמעון</option> 
+                        <option value="המכללה האקדמית להנדסה אורט ע&quot;ש ברואדה" >המכללה האקדמית להנדסה אורט ע"ש ברואדה</option> 
+                        <option value="המכללה האקדמית להנדסה י-ם" >המכללה האקדמית להנדסה י-ם</option> 
+                        <option value="המכללה האקדמית של תל אביב-יפו" >המכללה האקדמית של תל אביב-יפו</option> 
+                        <option value="המכללה למנהל" >המכללה למנהל</option> 
+                        <option value="המרכז הבניתחומי הרצליה" >המרכז הבניתחומי הרצליה</option> 
+                        <option value="טורו קולג'" >טורו קולג'</option> 
+                        <option value="המרכז האקדמי למשפט ועסקים רמת גן" >המרכז האקדמי למשפט ועסקים רמת גן</option> 
+                        <option value="מורשת יעקב" >מורשת יעקב</option> 
+                        <option value="מכון טכנולוגי חולון" >מכון טכנולוגי חולון</option> 
+                        <option value="מכון לב" >מכון לב</option> 
+                        <option value="מכללה אקדמית עמק יזרעאל" >מכללה אקדמית עמק יזרעאל</option> 
+                        <option value="מכללה אקדמית צפת" >מכללה אקדמית צפת</option> 
+                        <option value="מכללת אורנים" >מכללת אורנים</option> 
+                        <option value="מכללת הדסה י-ם" >מכללת הדסה י-ם</option> 
+                        <option value="מכללת וינגייט" >מכללת וינגייט</option> 
+                        <option value="מכללת ויצו להכשרת מורים" >מכללת ויצו להכשרת מורים</option> 
+                        <option value="מכללת יהודה ושומרון-אריאל" >מכללת יהודה ושומרון-אריאל</option> 
+                        <option value="מכללת לוינסקי לחינוך" >מכללת לוינסקי לחינוך</option> 
+                        <option value="מכללת ספיר" >מכללת ספיר</option> 
+                        <option value="מכללת רופין" >מכללת רופין</option> 
+                        <option value="מכללת שנקר" >מכללת שנקר</option> 
+                        <option value="מכללת שערי משפט" >מכללת שערי משפט</option> 
+                        <option value="מכללת תל חי" >מכללת תל חי</option> 
+                        <option value="מרכז אקדמי פרס" >מרכז אקדמי פרס</option> 
+                        <option value="סמינר הקיבוצים" >סמינר הקיבוצים</option> 
+                        <option value="אחר" >אחר</option>
+					</select>
+					 <select id="education_1_average" name="education_1_average">
+	                    <option>ציון ממוצע</option>
+	                    <option value="0-50" >0-50</option> 
+	                    <option value="51-60" >51-60</option> 
+	                    <option value="61-65" >61-65</option> 
+	                    <option value="66-70" >66-70</option> 
+	                    <option value="71-75" >71-75</option> 
+	                    <option value="76-80" >76-80</option> 
+	                    <option value="81-85" >81-85</option> 
+	                    <option value="86-90" >86-90</option> 
+	                    <option value="91-95" >91-95</option> 
+	                    <option value="96-100" >96-100</option> 
+	                </select>
+	                </fieldset>
+					<fieldset class="faculty_list"  data-role="controlgroup">						
+						<input class="checkbox_array" type="hidden" id="education_1_faculty" name="education_1_faculty" value="{}">
+						<a class="choose_button" data-role="button">בחירת חוגים</a>
+					</fieldset>
+					<fieldset class="small_date" id="education_1_start_date" data-type="horizontal" data-role="controlgroup">
+						<legend><b>תאריך תחילה</b></legend>				
+						 <select name="education_1_start_month" id="education_1_start_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>   
+				        <select name="education_1_start_year" id="education_1_start_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <fieldset class="small_date" id="education_1_end_date" data-type="horizontal" data-role="controlgroup">
+				    	<legend><b>תאריך סיום</b></legend>					
+						 <select name="education_1_end_month" id="education_1_end_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="education_1_end_year" id="education_1_end_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <button class="remove_container">מחיקה</button>
+				    </div>
+				    <button class="add_container">הוספת השכלה</button>
+				</div>
+				<div data-role="collapsible" id="employment">
+					<h3>ניסיון תעסוקתי</h3>
+					<div id="employment_0_container">
+					<fieldset class="small_date" id="employment_0_start_date" data-type="horizontal" data-role="controlgroup">						
+						<legend><b>תאריך תחילה</b></legend>				
+						 <select name="employment_0_start_month" id="employment_0_start_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="employment_0_start_year" id="employment_0_start_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <fieldset class="small_date" id="employment_0_end_date" data-type="horizontal" data-role="controlgroup">
+				    	<legend><b>תאריך סיום</b></legend>					
+						 <select name="employment_0_end_month" id="employment_0_end_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="employment_0_end_year" id="employment_0_end_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>		
+				    <fieldset data-role="controlgroup">
+						<select class="job_categories" name="employment_0_category" id="employment_0_category">
+							<option>תחום ראשי</option>						
+						</select>					
+						<input type="hidden" id="employment_0_profession" name="employment_0_profession" value="{}">
+						<a class="choose_button" data-role="button">בחירת משרות</a>				
+					</fieldset>
+					<div class="profile_container">
+						<div class="input_placeholder">שם החברה</div>
+						<input id="employment_0_company" type="text" name="employment_0_company" />	
+					</div>
+					<select id="employment_0_job_title" name="employment_0_job_title">
+						<option value="0">דרג ניהולי</option> 
+						<option value="ללא דרג ניהולי">ללא דרג ניהולי</option> 
+						<option value="דרג ניהולי">דרג ניהולי</option> 
+						<option value="הנהלה בכירה">הנהלה בכירה</option> 
+					</select>
+					<div class="profile_container">
+						<div class="input_placeholder">הערות</div>
+						<input id="employment_0_comments" type="text" name="employment_0_comments" />	
+					</div>					
+					</div>
+					<div id="employment_1_container" class="iteration_container">
+					<fieldset class="small_date" id="employment_1_start_date" data-type="horizontal" data-role="controlgroup">						
+						<legend><b>תאריך תחילה</b></legend>				
+						 <select name="employment_1_start_month" id="employment_1_start_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="employment_1_start_year" id="employment_1_start_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <fieldset class="small_date" id="employment_1_end_date" data-type="horizontal" data-role="controlgroup">
+				    	<legend><b>תאריך סיום</b></legend>					
+						 <select name="employment_1_end_month" id="employment_1_end_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="employment_1_end_year" id="employment_1_end_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>							
+					<fieldset data-role="controlgroup">
+						<select class="job_categories" name="employment_1_category" id="employment_1_category">
+							<option>תחום ראשי</option>						
+						</select>
+						<input type="hidden" id="employment_1_profession" name="employment_1_profession" value="{}">
+						<a class="choose_button" data-role="button">בחירת משרות</a>
+					</fieldset>
+					<div class="profile_container">
+						<div class="input_placeholder">שם החברה</div>
+						<input id="employment_1_company" type="text" name="employment_1_company" />	
+					</div>
+					<select id="employment_1_job_title" name="employment_1_job_title">
+						<option value="0">דרג ניהולי</option> 
+						<option value="ללא דרג ניהולי">ללא דרג ניהולי</option> 
+						<option value="דרג ניהולי">דרג ניהולי</option> 
+						<option value="הנהלה בכירה">הנהלה בכירה</option> 
+					</select>
+					<div class="profile_container">
+						<div class="input_placeholder">הערות</div>
+						<input id="employment_1_comments" type="text" name="employment_1_comments" />	
+					</div>
+					<button class="remove_container">מחיקה</button>
+					</div>
+					<button class="add_container">הוספת ניסיון</button>
+				</div>
+				<div data-role="collapsible" id="self_eval">
+					<h3>הערכה עצמית</h3>
+					<div id="remaining_points" style="color: red; text-align: center">לרשותך ( <span style="font-weight:bold">390</span> ) נקודות לחלוקה</div>
+					<h4>יושרה</h4>
+					<input type="range" class="slider" step="5" name="self_eval_fielda" id="self_eval_fielda" value="70" min="0" max="100" />
+					<h4>יצירתיות</h4>
+					<input type="range" class="slider" step="5" name="self_eval_fieldb" id="self_eval_fieldb" value="70" min="0" max="100" />
+					<h4>גאווה מקצועית</h4>
+					<input type="range" class="slider" step="5" name="self_eval_fieldc" id="self_eval_fieldc" value="70" min="0" max="100" />
+					<h4>תקשורת בינאישית וחוש הומור</h4>
+					<input type="range" class="slider" step="5" name="self_eval_fieldd" id="self_eval_fieldd" value="70" min="0" max="100" />
+					<h4>דבקות במטרה</h4>
+					<input type="range" class="slider" step="5" name="self_eval_fielde" id="self_eval_fielde" value="70" min="0" max="100" />
+				</div>
+				<div data-role="collapsible">
+					<h3>פרטים נוספים</h3>
+					<h2>שפות:</h2>
+					<div id ="languages">
+					<div id="languages_0_container">
+					<select name="languages_0_language" id="languages_0_language">
+						<option>שפה</option>
+						<option value="עברית">עברית</option> 
+                        <option value="אנגלית">אנגלית</option>
+                        <option value="ערבית">ערבית</option> 
+                        <option value="רוסית">רוסית</option> 
+                        <option value="צרפתית">צרפתית</option> 
+                        <option value="ספרדית">ספרדית</option> 
+                        <option value="הולנדית">הולנדית</option> 
+                        <option value="גרמנית">גרמנית</option> 
+                        <option value="יפנית">יפנית</option> 
+                        <option value="סינית">סינית</option> 
+                        <option value="הונגרית">הונגרית</option> 
+                        <option value="איטלקית">איטלקית</option> 
+                        <option value="רומנית">רומנית</option> 
+                        <option value="אמהרית">אמהרית</option>
+                        <option value="אחר">אחר</option>
+					</select>
+					<select name="languages_0_speech_level" id="languages_0_speech_level">
+						<option>רמת דיבור</option>
+						<option value="שפת אם">שפת אם</option> 
+						<option value="טובה">טובה מאוד</option> 
+						<option value="בינונית">טובה / בינונית</option> 
+						<option value="נמוכה">נמוכה</option> 
+					</select>
+					<select name="languages_0_reading_level" id="languages_0_reading_level">
+						<option>רמת קריאה</option>	
+						<option value="שפת אם">שפת אם</option> 
+						<option value="טובה">טובה מאוד</option> 
+						<option value="בינונית">טובה / בינונית</option> 
+						<option value="נמוכה">נמוכה</option>					
+					</select>
+					<select name="languages_0_writing_level" id="languages_0_writing_level">
+						<option>רמת כתיבה</option>	
+						<option value="שפת אם">שפת אם</option> 
+						<option value="טובה">טובה מאוד</option> 
+						<option value="בינונית">טובה / בינונית</option> 
+						<option value="נמוכה">נמוכה</option>					
+					</select>
+					</div>
+					<div id="languages_1_container" class="iteration_container">
+					<select name="languages_1_language" id="languages_1_language">
+						<option>שפה</option>
+						<option value="עברית">עברית</option> 
+                        <option value="אנגלית">אנגלית</option>
+                        <option value="ערבית">ערבית</option> 
+                        <option value="רוסית">רוסית</option> 
+                        <option value="צרפתית">צרפתית</option> 
+                        <option value="ספרדית">ספרדית</option> 
+                        <option value="הולנדית">הולנדית</option> 
+                        <option value="גרמנית">גרמנית</option> 
+                        <option value="יפנית">יפנית</option> 
+                        <option value="סינית">סינית</option> 
+                        <option value="הונגרית">הונגרית</option> 
+                        <option value="איטלקית">איטלקית</option> 
+                        <option value="רומנית">רומנית</option> 
+                        <option value="אמהרית">אמהרית</option>
+                        <option value="אחר">אחר</option>
+					</select>
+					<select name="languages_1_speech_level" id="languages_1_speech_level">
+						<option>רמת דיבור</option>
+						<option value="שפת אם">שפת אם</option> 
+						<option value="טובה">טובה מאוד</option> 
+						<option value="בינונית">טובה / בינונית</option> 
+						<option value="נמוכה">נמוכה</option> 
+					</select>
+					<select name="languages_1_reading_level" id="languages_1_reading_level">
+						<option>רמת קריאה</option>	
+						<option value="שפת אם">שפת אם</option> 
+						<option value="טובה">טובה מאוד</option> 
+						<option value="בינונית">טובה / בינונית</option> 
+						<option value="נמוכה">נמוכה</option>					
+					</select>
+					<select name="languages_1_writing_level" id="languages_1_writing_level">
+						<option>רמת כתיבה</option>	
+						<option value="שפת אם">שפת אם</option> 
+						<option value="טובה">טובה מאוד</option> 
+						<option value="בינונית">טובה / בינונית</option> 
+						<option value="נמוכה">נמוכה</option>					
+					</select>
+					<button class="remove_container">מחיקה</button>
+					</div>
+					<button class="add_container">הוספת שפה</button>
+					</div>					
+					<h2>התנדבויות:</h2>
+					<div id ="volunteering">
+						<div id="volunteering_0_container">
+							<div class="profile_container">
+								<div class="input_placeholder">תיאור</div>
+								<input id="volunteering_0_" type="text" name="volunteering_0_" />	
+							</div>
+						</div>
+						<div id="volunteering_1_container" class="iteration_container">
+							<div class="profile_container">
+								<div class="input_placeholder">תיאור</div>
+								<input id="volunteering_1_" type="text" name="volunteering_1_" />	
+							</div>
+							<button class="remove_container">מחיקה</button>
+						</div>
+						<button class="add_container">הוספת התנדבות</button>
+					</div>
+					<h2>תחביבים:</h2>
+					<div id ="hobbies">
+						<div id="hobbies_0_container">
+							<div class="profile_container">
+								<div class="input_placeholder">תיאור</div>
+								<input id="hobbies_0_" type="text" name="hobbies_0_" />	
+							</div>
+						</div>
+						<div id="hobbies_1_container" class="iteration_container">
+							<div class="profile_container">
+								<div class="input_placeholder">תיאור</div>
+								<input id="hobbies_1_" type="text" name="hobbies_1_" />	
+							</div>
+							<button class="remove_container">מחיקה</button>
+						</div>
+						<button class="add_container">הוספת תחביב</button>
+					</div>
+					<h2>צבא:</h2>
+					 <fieldset class="small_date" id="army_recruit_date" data-type="horizontal" data-role="controlgroup">
+				    	<legend><b>תאריך גיוס</b></legend>					
+						 <select name="army_recruit_month" id="army_recruit_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="army_recruit_year" id="army_recruit_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				     <fieldset class="small_date" id="army_release_date" data-type="horizontal" data-role="controlgroup">
+				    	<legend><b>תאריך שחרור</b></legend>					
+						 <select name="army_release_month" id="army_release_month">
+						 	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="army_release_year" id="army_release_year">
+				        	<option>שנה</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>							
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <select name="army_service_type" id="army_service_type">
+						<option>סוג שירות</option>	
+						<option value="קרבי - מלא">קרבי - מלא</option> 
+						<option value="קרבי - חלקי">קרבי - חלקי</option> 
+						<option value="מלא">מלא</option> 
+						<option value="חלקי">חלקי</option> 
+						<option value="התנדבות">התנדבות</option> 
+						<option value="שרות לאומי">שרות לאומי</option> 
+						<option value="שרות אזרחי">שרות אזרחי</option> 
+						<option value="פטור">פטור</option>					
+					</select>
+					<select name="army_rank" id="army_rank">
+						<option>דרגה</option>	
+						<option value="רב&quot;ט">רב"ט</option> 
+						<option value="סמל">סמל</option> 
+						<option value="סמל ראשון (סמ&quot;ר)" selected="">סמל ראשון (סמ"ר)</option> 
+						<option value="רב סמל (רס&quot;ל)">רב סמל (רס"ל)</option> 
+						<option value="סגן משנה (סג&quot;מ)">סגן משנה (סג"מ)</option> 
+						<option value="סגן">סגן</option> 
+						<option value="סרן">סרן</option> 
+						<option value="רב סרן (רס&quot;ן)">רב סרן (רס"ן)</option> 
+						<option value="סגן אלוף (סא&quot;ל)">סגן אלוף (סא"ל)</option> 
+						<option value="אלוף משנה (אל&quot;מ)">אלוף משנה (אל"מ)</option> 
+						<option value="רב סמל ראשון (רס&quot;ר)">רב סמל ראשון (רס"ר)</option> 
+						<option value="רב סמל מתקדם (רס&quot;מ)">רב סמל מתקדם (רס"מ)</option> 
+						<option value="רב סמל בכיר (רס&quot;ב)">רב סמל בכיר (רס"ב)</option> 
+						<option value="רב נגד (רנ&quot;ג)">רב נגד (רנ"ג)</option> 
+						<option value="קצין מקצועי אקדמאי (קמ&quot;א)">קצין מקצועי אקדמאי (קמ"א)</option> 
+						<option value="קצין אקדמאי בכיר (קא&quot;ב)">קצין אקדמאי בכיר (קא"ב)</option> 
+						<option value="אחר">אחר</option> 					
+					</select>
+					<div class="profile_container">
+						<div class="input_placeholder">תפקיד</div>
+						<input id="army_job" type="text" name="army_job" />	
+					</div>
+					<div class="profile_container">
+						<div class="input_placeholder">פרטים נוספים</div>
+						<input id="army_comments" type="text" name="army_comments" />	
+					</div>
+				</div>
+				<div data-role="collapsible">
+					<h3>צעד הבא</h3>
+					<select class="job_categories" name="next_step_category" id="next_step_category">
+						<option>תחום ראשי</option>						
+					</select>
+					<select name="next_step_profession" id="next_step_profession">
+						<option>משרה</option>						
+					</select>
+					<select id="next_step_job_title" name="next_step_job_title">
+						<option value="0">דרג ניהולי</option> 
+						<option value="ללא דרג ניהולי">ללא דרג ניהולי</option> 
+						<option value="דרג ניהולי">דרג ניהולי</option> 
+						<option value="הנהלה בכירה">הנהלה בכירה</option> 
+					</select>
+					<select id="next_step_location" name="next_step_location">
+						<option>מיקום רצוי</option> 
+						<option value="" selected="">כל הארץ</option> 
+						<option value="צפון">צפון</option> 
+						<option value="חיפה והקריות">חיפה והקריות</option> 
+						<option value="השרון">השרון</option> 
+						<option value="תל-אביב והמרכז">תל-אביב והמרכז</option> 
+						<option value="השפלה">השפלה</option> 
+						<option value="ירושלים והסביבה">ירושלים והסביבה</option> 
+						<option value="דרום">דרום</option> 
+						<option value="אילת">אילת</option>
+					</select>
+					<select id="next_step_job_extent" name="next_step_job_extent">
+						<option>היקף המשרה</option> 
+						<option value="משרה מלאה">משרה מלאה</option> 
+						<option value="3/4 משרה">3/4 משרה</option> 
+						<option value="1/2 משרה">1/2 משרה</option> 
+						<option value="לפי שעה">לפי שעה</option> 
+						<option value="ע&quot;ב עמלות">ע"ב עמלות</option> 
+						<option value="משמרות">משמרות</option> 
+					</select>
+					<fieldset id="next_step_availability_date" data-type="horizontal" data-role="controlgroup">					
+						 <select name="next_step_availability_day" id="next_step_availability_day">
+						 	<option>יום</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				            <option value="13">13</option>
+				            <option value="14">14</option>
+				            <option value="15">15</option>
+				            <option value="16">16</option>
+				            <option value="17">17</option>
+				            <option value="18">18</option>
+				            <option value="19">19</option>
+				            <option value="20">20</option>
+				            <option value="21">21</option>
+				            <option value="22">22</option>
+				            <option value="23">23</option>
+				            <option value="24">24</option>
+				            <option value="25">25</option>
+				            <option value="26">26</option>
+				            <option value="27">27</option>
+				            <option value="28">28</option>
+				            <option value="29">29</option>
+				            <option value="30">30</option>
+				            <option value="31">31</option>
+				        </select>
+				        <select name="next_step_availability_month" id="next_step_availability_month">
+				        	<option>חודש</option>
+				            <option value="1">01</option>
+				            <option value="2">02</option>
+				            <option value="3">03</option>
+				            <option value="4">04</option>
+				            <option value="5">05</option>
+				            <option value="6">06</option>
+				            <option value="7">07</option>
+				            <option value="8">08</option>
+				            <option value="9">09</option>
+				            <option value="10">10</option>
+				            <option value="11">11</option>
+				            <option value="12">12</option>
+				        </select>			        			   
+				        <select name="next_step_availability_year" id="next_step_availability_year">
+				        	<option>שנה</option>
+				        	<option value="2016">2016</option>
+				        	<option value="2016">2015</option>
+				        	<option value="2014">2014</option>
+							<option value="2013">2013</option>
+							<option value="2012">2012</option>
+							<option value="2011">2011</option>
+							<option value="2010">2010</option>
+							<option value="2009">2009</option>
+							<option value="2008">2008</option>
+							<option value="2007">2007</option>
+							<option value="2006">2006</option>
+							<option value="2005">2005</option>
+							<option value="2004">2004</option>
+							<option value="2003">2003</option>
+							<option value="2002">2002</option>
+							<option value="2001">2001</option>
+							<option value="2000">2000</option>			            
+							<option value="1999">1999</option>
+							<option value="1998">1998</option>
+							<option value="1997">1997</option>
+							<option value="1996">1996</option>
+							<option value="1995">1995</option>
+							<option value="1994">1994</option>
+							<option value="1993">1993</option>
+							<option value="1992">1992</option>
+							<option value="1991">1991</option>
+							<option value="1990">1990</option>
+							<option value="1989">1989</option>
+							<option value="1988">1988</option>
+							<option value="1987">1987</option>
+							<option value="1986">1986</option>
+							<option value="1985">1985</option>
+							<option value="1984">1984</option>
+							<option value="1983">1983</option>
+							<option value="1982">1982</option>
+							<option value="1981">1981</option>
+							<option value="1980">1980</option>
+							<option value="1979">1979</option>
+							<option value="1978">1978</option>
+							<option value="1977">1977</option>
+							<option value="1976">1976</option>
+							<option value="1975">1975</option>
+							<option value="1974">1974</option>
+							<option value="1973">1973</option>
+							<option value="1972">1972</option>
+							<option value="1971">1971</option>
+							<option value="1970">1970</option>
+							<option value="1969">1969</option>
+							<option value="1968">1968</option>
+							<option value="1967">1967</option>
+							<option value="1966">1966</option>
+							<option value="1965">1965</option>
+							<option value="1964">1964</option>
+							<option value="1963">1963</option>
+							<option value="1962">1962</option>
+							<option value="1961">1961</option>
+							<option value="1960">1960</option>
+							<option value="1959">1959</option>
+							<option value="1958">1958</option>
+							<option value="1957">1957</option>
+							<option value="1956">1956</option>
+							<option value="1955">1955</option>
+							<option value="1954">1954</option>
+							<option value="1953">1953</option>
+							<option value="1952">1952</option>
+							<option value="1951">1951</option>
+							<option value="1950">1950</option>
+							<option value="1949">1949</option>
+							<option value="1948">1948</option>
+							<option value="1947">1947</option>
+							<option value="1946">1946</option>
+							<option value="1945">1945</option>
+							<option value="1944">1944</option>
+				        </select>		        
+				    </fieldset>
+				    <select id="next_step_notification_period" name="next_step_notification_period">
+						<option>תקופת התראה</option> 
+						<option value="יום">יום</option> 
+                        <option value="3 ימים">3 ימים</option> 
+                        <option value="שבוע">שבוע</option> 
+                        <option value="שבועים">שבועים</option> 
+                        <option value="חודש">חודש</option> 
+                        <option value="שלושה חודשים">שלושה חודשים</option> 
+					</select>
+				</div>
+				<div id="build_profile" style="text-align: center" data-role="collapsible" data-collapsed="false">
+					<h3>בניית פרופיל</h3>
+					<fieldset data-role="controlgroup" id="buttons_fieldset">
+						<a data-role="button" onclick="takePicture();">צילום תמונה</a>
+						<a data-role="button" onclick="selectPicture();">בחירת תמונה מגלרייה</a>
+						<a data-role="button" onclick="uploadPicture();">העלאת תמונה</a>
+						<img style="width:120px;visibility:hidden;display:none;padding-top:20px;margin:auto;display:block" id="camera_image" src="" />
+					</fieldset>
+				</div>
+			</div>
+			<button id="submit_profile">שמירה</button>
+		</div>
+		</form>
+	</div>
+	
+	<script src="js/jquery-2.0.2.min.js"></script>
+	<script src="js/jquery.mobile-1.4.1.min.js"></script>
+	<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+	<script src="js/iscroll_current.js"></script>
+	<script src="js/jquery.ui.touch-punch.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
 </html>
