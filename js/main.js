@@ -417,7 +417,7 @@ function selectPicture() {
 			var img = document.getElementById('camera_image');
 			img.style.visibility = "visible";
 			img.style.display = "block";
-			img.src = uri;
+			img.src = decodeURI(uri);
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
@@ -472,7 +472,7 @@ function viewUploadedPictures() {
 				if (xmlhttp.status === 200) {
 					data = xmlhttp.responseText;
 					alert(data);
-					$('#build_profile .ui-collapsible-content h3').andSelf().next('fieldset :not(#buttons_fieldset)').remove();
+					$('#build_profile .ui-collapsible-content h3').next('fieldset :not(#buttons_fieldset)').andSelf().remove();
 					$('#build_profile .ui-collapsible-content').prepend(data).trigger('create');
 				}
 				else {
@@ -915,7 +915,7 @@ function get_user() {
 				    $('#next_step_profession').prev('span').html($('#next_step_profession>option:selected').text());
 				    
 				    // Show existing gallery photos before Upload Form
-			    	$(details['gallery']).prependTo('#build_profile .ui-collapsible-content').trigger('create');
+			    	$('#build_profile .ui-collapsible-content').prepend(details['gallery']).trigger('create');
 				    
 				    // Self Evaluation handler, only if set.
 					var current_vals = [];
