@@ -842,7 +842,7 @@ function get_jobs(override) {
 					});*/
 					$('#jobs_container').scrollTop(236);
 					$('#test').show();
-					$('#jobs_container').scroll(function(){
+					$('#jobs_container').on('touchmove',function(){
 						if($(this).scrollTop() < 150) {
 							$('#test #loading_text').html('שחררו לרענן משרות...');
 							$('#test').addClass('flip');
@@ -851,7 +851,7 @@ function get_jobs(override) {
 								$('#test').removeClass('flip');
 						}
 					});
-					$('#jobs_container').on('touchend', function(e){
+					$('#jobs_container').on('vmouseup', function(e){
 						if($(this).scrollTop() < 150) {
 							$('#test #loading_text').html('מרענן משרות...');
 							$('#test').removeClass('flip');
