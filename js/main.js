@@ -13,23 +13,15 @@ var change_limit;
 
 
 
-/*
 
-var myScroll, spullDownEl, pullDownOffset;
 
-function pullDownAction () {
-	myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
-}
-
-function pullUpAction () {
-	myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
-}
+var myScroll, pullDownEl, pullDownOffset;
 
 function loaded() {
 	pullDownEl = document.getElementById('test');
 	pullDownOffset = pullDownEl.offsetHeight;
 		
-	myScroll = new iScroll('jobs_container', {
+	myScroll = new iScroll('jobs_test', {
 		useTransition: true,
 		topOffset: pullDownOffset,
 		onRefresh: function () {
@@ -48,18 +40,17 @@ function loaded() {
 		},
 		onScrollEnd: function () {
 			if (pullDownEl.className.match('flip')) {
-				loading('show');
-				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'מרענן משרות...';
-				pullDownAction();	// Execute custom function (ajax call?)
+				pullDownEl.querySelector('#loading_text').innerHTML = 'מרענן משרות...';
+				$('.pullDownIcon').css('opacity', '0');
+				get_jobs(true);
 			}
 		}
 	});
 }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-
 document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
-*/
+
 
 
 // Pull down to refresh module
@@ -196,10 +187,10 @@ $(document).on('click', '.job_result button', function() {
 		return false;
 	}
 });
-
+/*
 $('#jobs_container').height($(window).height());
 $('#jobs_container').css('overflow', 'auto');
-$('#jobs_container').scrollTop(36)
+$('#jobs_container').scrollTop(36)*/
 
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
@@ -796,7 +787,6 @@ function get_jobs(override) {
 				data = JSON.parse(req.responseText);
 				if(data.success) {
 					if(override) {
-						$('#jobs_container').animate({scrollTop: 236}, 300);
 						$('.incomplete').hide();
 						$('.job_result').remove();
 						$('.pullDownIcon').css('opacity', '1');
@@ -807,7 +797,7 @@ function get_jobs(override) {
 					if(data.incomplete) {
 						$('.incomplete').show();
 					}
-					
+					myScroll.refresh();
 					// Pull Down to Refresh
 					if (top_limit == null) {
 						top_limit = $('#jobs_container').position().top;
@@ -839,9 +829,13 @@ function get_jobs(override) {
 								$(this).animate({'top': 0}, 200);
 							}
 						}
-					});*/
+					});*//*
 					$('#jobs_container').scrollTop(236);
 					$('#test').show();
+					var current_scrollTop;
+					$('#jobs_container').on('touchstart',function(){
+						current_scrollTop = $(this).scrollTop();						
+					});
 					$('#jobs_container').on('touchmove',function(){
 						if($(this).scrollTop() < 150) {
 							$('#test #loading_text').html('שחררו לרענן משרות...');
@@ -863,7 +857,7 @@ function get_jobs(override) {
 							$('#test').removeClass('flip');
 							$(this).animate({scrollTop: 236}, 200);
 						}
-					});
+					});*/
 				}
 				loading('hide');
 			}
