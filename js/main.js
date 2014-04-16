@@ -44,7 +44,15 @@ function loaded() {
 				get_jobs(true);
 			}
 		}
+	});	
+	
+	/////////////////////////////////////////////
+	$('input').each(function(){
+		if($(this).val() != '') {
+			$(this).parent().prev('div').hide();
+		}
 	});
+	/////////////////////////////////////////////
 }
 
 document.getElementById('jobs_feed').addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -153,6 +161,12 @@ $('#profile_page').on("pagebeforeshow", function() {
 		location.reload(1);
 	} else if (!profile_loaded) {
 		if(user_id == null) {
+			user_id = localStorage.logged_in.slice(0, localStorage.logged_in.indexOf('.'));
+			name = localStorage.logged_in.slice(localStorage.logged_in.lastIndexOf('.') + 1);
+			$('.header_normal h1').text("שלום, " + name);
+			get_user();
+			get_jobs();
+			profile_loaded = true;
 			/*$('body *').not('.ui-loader').hide();
 			$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 			setTimeout(function(){
@@ -289,28 +303,28 @@ $('#submit_profile').click(function(e){
 // Misc.
 $('.logout').on('click', function(e) {
 	$.mobile.loading('show');
-	var check_fb_connected = getLoginStatus();
+	//var check_fb_connected = getLoginStatus();
 	localStorage.clear();
 	user_id = null;
 	setTimeout(function(){
-		if(check_fb_connected) {
-			logout();
-		}
+		//if(check_fb_connected) {
+			//logout();
+		//}
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
 		location.reload(1);
 	}, 2000);
 });
 
-$('.login_label').click(function(){
+$('.input_placeholder').click(function(){
 	$(this).next().children('input').focus();
 });
 
-$('input').focus(function(){
+$('input').on('focus', function(){
 	$(this).parent().prev('div').hide();
 	var CheckFields = setInterval(function(){
 	$('input').each(function(){
 		if($(this).val() != '') {
-			$(this).parent().prev('login_label').hide();
+			$(this).parent().prev('div').hide();
 		}
 	});
 	},0);
