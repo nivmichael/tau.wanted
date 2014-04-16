@@ -13,21 +13,26 @@ function loaded() {
 	pullDownOffset = pullDownEl.offsetHeight;
 		
 	myScroll = new iScroll('jobs_test', {
-		
+		vScrollbar: true,
+		hideScrollbar: true,
+		scrollbarClass: 'myScrollbar',
 		useTransition: true,
-		topOffset: pullDownOffset,
+		topOffset: 0,
 		onRefresh: function () {
+			$('.pullDownIcon').css('opacity', '1');
 			pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
 		},
 		onScrollMove: function () {
-			if (this.y > 45 && !pullDownEl.className.match('flip')) {
+			if (this.y > 55 && !pullDownEl.className.match('flip')) {
 				pullDownEl.className = 'flip';
 				pullDownEl.querySelector('#loading_text').innerHTML = 'שחררו לרענות משרות';
-				this.minScrollY = 45;
-			} else if (this.y < 45 && pullDownEl.className.match('flip')) {
+				$('.pullDownIcon').css('opacity', '1');
+				this.minScrollY = 55;
+			} else if (this.y < 55 && pullDownEl.className.match('flip')) {
 				pullDownEl.className = '';
 				pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
-				this.minScrollY = -pullDownOffset;
+				$('.pullDownIcon').css('opacity', '1');
+				this.minScrollY = 0;
 			} else {
 				
 			}
