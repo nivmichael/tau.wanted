@@ -13,6 +13,7 @@ function loaded() {
 	pullDownOffset = pullDownEl.offsetHeight;
 		
 	myScroll = new iScroll('jobs_test', {
+		useTransform: false,
 		useTransition: true,
 		topOffset: pullDownOffset,
 		onRefresh: function () {
@@ -27,6 +28,8 @@ function loaded() {
 				pullDownEl.className = '';
 				pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
 				this.minScrollY = -pullDownOffset;
+			} else {
+				
 			}
 		},
 		onScrollEnd: function () {
@@ -39,7 +42,7 @@ function loaded() {
 	});
 }
 
-//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+document.getElementById('jobs_feed').addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
 
 // Login Page
