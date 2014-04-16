@@ -28,14 +28,14 @@ function loaded() {
 			pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
 		},
 		onScrollMove: function () {
-			if (this.y > 5 && !pullDownEl.className.match('flip')) {
+			if (this.y > 45 && !pullDownEl.className.match('flip')) {
 				pullDownEl.className = 'flip';
 				pullDownEl.querySelector('#loading_text').innerHTML = 'שחררו לרענות משרות';
-				this.minScrollY = 0;
-			} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+				this.minScrollY = 45;
+			} else if (this.y < 45 && pullDownEl.className.match('flip')) {
 				pullDownEl.className = '';
 				pullDownEl.querySelector('#loading_text').innerHTML = 'משכו למטה לרענון משרות...';
-				this.minScrollY = -pullDownOffset;
+				this.minScrollY = 0;
 			}
 		},
 		onScrollEnd: function () {
