@@ -197,6 +197,10 @@ $(document).on('click', '.job_result button', function() {
 	}
 });
 
+$('#jobs_container').height($(window).height());
+$('#jobs_container').css('overflow', 'auto');
+$('#jobs_container').scrollTop(36)
+
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
 	get_employment_categories();
@@ -792,7 +796,7 @@ function get_jobs(override) {
 				data = JSON.parse(req.responseText);
 				if(data.success) {
 					if(override) {
-						$('#jobs_container').animate({'top': 0}, 300);
+						$('#jobs_container').animate({scrollTop: 236}, 300);
 						$('.incomplete').hide();
 						$('.job_result').remove();
 						$('.pullDownIcon').css('opacity', '1');
@@ -808,7 +812,7 @@ function get_jobs(override) {
 					if (top_limit == null) {
 						top_limit = $('#jobs_container').position().top;
 					}
-					$('#jobs_container').draggable({
+					/*$('#jobs_container').draggable({
 						axis: "y",
 						containment: [0, top_limit],
 						start: function(ev, ui) {
@@ -834,6 +838,30 @@ function get_jobs(override) {
 								$('#test').removeClass('flip');
 								$(this).animate({'top': 0}, 200);
 							}
+						}
+					});*/
+					$('#jobs_container').scrollTop(236);
+					$('#test').show();
+					$('#jobs_container').scroll(function(){
+						if($(this).scrollTop() < 150) {
+							$('#test #loading_text').html('שחררו לרענן משרות...');
+							$('#test').addClass('flip');
+						} else {
+								$('#test #loading_text').html('משכו למטה לרענון משרות...');
+								$('#test').removeClass('flip');
+						}
+					});
+					$('#jobs_container').on('touchend', function(e){
+						if($(this).scrollTop() < 150) {
+							$('#test #loading_text').html('מרענן משרות...');
+							$('#test').removeClass('flip');
+							$('.pullDownIcon').css('opacity', '0');
+							get_jobs(true);
+							$(this).animate({scrollTop: 120}, 200);
+						} else {
+							$('#test #loading_text').html('משכו למטה לרענון משרות...');
+							$('#test').removeClass('flip');
+							$(this).animate({scrollTop: 236}, 200);
 						}
 					});
 				}

@@ -17,10 +17,10 @@ input {
 #test {
 	font-size:16px;
 	height:16px;
-	position:absolute;
 	width:100%;
-	top:-35px;
+	padding: 210px 0 10px 0;
 	text-align:center;
+	display: none;
 }
 
 #test div{
