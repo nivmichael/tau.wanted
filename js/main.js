@@ -13,7 +13,7 @@ function loaded() {
 	pullDownOffset = pullDownEl.offsetHeight;
 		
 	myScroll = new iScroll('jobs_test', {
-		useTransform: false,
+		
 		useTransition: true,
 		topOffset: pullDownOffset,
 		onRefresh: function () {
@@ -101,10 +101,17 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 	}
 });
 
+var save_scrollTop;
+$('#jobs_container').on('touchstart', function(e){
+	save_scrollTop = myScroll.y;
+});
+
 $(document).on('click', '.job_result', function(){
-	job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
-	job_title = $(this).find('div').next().html();
-	$(this).find('.description').slideToggle('fast');
+	if(save_scrollTop == myScroll.y) {
+		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
+		job_title = $(this).find('div').next().html();
+		$(this).find('.description').slideToggle('fast');
+	}
 });
 
 $(document).on('click', '.job_result button', function() {
