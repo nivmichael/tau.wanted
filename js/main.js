@@ -368,7 +368,7 @@ function selectPicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = decodeURI(uri);
-			alert(encodeURIURI(uri))
+			alert(encodeURI(uri))
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
