@@ -353,6 +353,7 @@ function takePicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = uri;
+			alert (uri);
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
@@ -367,8 +368,8 @@ function selectPicture() {
 			var img = document.getElementById('camera_image');
 			img.style.visibility = "visible";
 			img.style.display = "block";
-			img.src = decodeURI(uri);
-			alert(encodeURI(uri))
+			img.src = uri;
+			alert (uri);
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
