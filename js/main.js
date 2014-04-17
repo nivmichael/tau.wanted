@@ -368,13 +368,13 @@ function selectPicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = uri;
-			alert(uri)
+			alert(window.atob(uri));
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
 			$('#lnkDialog').click();
 		},
-		{ quality: 50, destinationType: navigator.camera.DestinationType.DATA_URL, sourceType: navigator.camera.PictureSourceType.SAVEDPHOTOALBUM});
+		{ quality: 50, destinationType: navigator.camera.DestinationType.DATA_URL, sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY});
 };
 
 function uploadPicture() {
