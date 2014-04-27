@@ -4,6 +4,7 @@ var CheckFields = null;
 var details = null;
 var profile_loaded = false;
 var jobs_loaded = null;
+var faculty_corses_loaded = false;
 
 /* Pull Down to Refresh */
 var myScroll, pullDownEl, pullDownOffset;
@@ -47,7 +48,7 @@ function loaded() {
 	});	
 	
 	/////////////////////////////////////////////
-	$('input').each(function(){
+	$('input').not(':checkbox').each(function(){
 		if($(this).val() != '') {
 			$(this).parent().prev('div').hide();
 		}
@@ -97,8 +98,10 @@ $('#registration_form').submit(function(e){
 // Home Page
 $('#jobs_feed').on("pagebeforecreate", function() {
 	// We're doing it here ONCE, assuming that #jobs_feed will always be shown before #profile_page, therefore created earlier
-	// This way tha Faculty Courses will be already on page and will not interrupt other JS regarding them 
-	get_faculty_courses();
+	// This way tha Faculty Courses will be already on page and will not interrupt other JS regarding them
+	if(!faculty_corses_loaded) { 
+		get_faculty_courses();
+	}
 });
 
 $('#jobs_feed').on("pagebeforeshow", function() {
@@ -114,7 +117,8 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 	}
 });
 
-var save_scrollTop;
+var save_scrollTop = 0;
+
 $('#jobs_container').on('touchstart', function(e){
 	save_scrollTop = myScroll.y;
 });
@@ -139,6 +143,10 @@ $(document).on('click', '.job_result button', function() {
 $('#profile_page').on("pagebeforecreate", function() {
 	get_employment_categories();
 	get_cities();
+	
+	if(!faculty_corses_loaded) { 
+		get_faculty_courses();
+	}
 	
 	$('#education input:checkbox').on('click', function() {
 		var $arr_values = $(this).parent().siblings(':hidden');
@@ -368,13 +376,12 @@ function selectPicture() {
 			img.style.visibility = "visible";
 			img.style.display = "block";
 			img.src = uri;
-			alert(window.atob(uri));
 		},
 		function(e) {
 			$('#error_alert_content').html('קרתה שגיאה, אנא נסו שנית.');
 			$('#lnkDialog').click();
 		},
-		{ quality: 50, destinationType: navigator.camera.DestinationType.DATA_URL, sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY});
+		{ quality: 50, destinationType: navigator.camera.DestinationType.FILE_URI, sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY});
 };
 
 function uploadPicture() {
@@ -530,7 +537,7 @@ function get_faculty_courses(faculty_array) {
 	}	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, true);
+	req.open("POST", href_url, false);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
@@ -540,6 +547,7 @@ function get_faculty_courses(faculty_array) {
 					if(faculty_array) {						
 						$('#choose_content').append(data.success).trigger('create');
 					} else {
+						faculty_corses_loaded = true;
 						$('.faculty_list').prepend(data.success).trigger('create');
 					}
 				}
