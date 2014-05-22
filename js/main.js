@@ -124,7 +124,7 @@ $('#jobs_container').on('touchstart', function(e){
 	save_scrollTop = myScroll.y;
 });
 
-$(document).on('click', '.job_result', function(){
+$(document).on('tap', '.job_result', function(){
 	if(save_scrollTop == myScroll.y) {
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
