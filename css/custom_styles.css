@@ -194,4 +194,4 @@ input {
 }
 
 /*Michael 22.5.2014*/
-#login_email, #login_password{color: #000000 !important;text-align: left !important;direction: ltr !important;}
+#login_email, #login_password{color: #000000 !important;text-align: right !important;direction: ltr !important;}
