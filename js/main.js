@@ -35,7 +35,6 @@ function loaded() {
 				$('.pullDownIcon').css('opacity', '1');
 				this.minScrollY = 0;
 			} else {
-				
 			}
 		},
 		onScrollEnd: function () {
@@ -47,13 +46,13 @@ function loaded() {
 		}
 	});	
 	
-	/////////////////////////////////////////////
+	/*////////////////////////////////////////////
 	$('input').not(':checkbox').each(function(){
 		if($(this).val() != '') {
 			$(this).parent().prev('div').hide();
 		}
 	});
-	/////////////////////////////////////////////
+	////////////////////////////////////////////*/
 	
 	myScroll.refresh();
 }
@@ -63,11 +62,11 @@ document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 2
 
 // Login Page
 $('#Login_Page').on("pagebeforecreate", function() {
-	if($('input').val() == '') {
+	/*if($('input').val() == '') {
 		$('input').prev('div').show();
 	} else {
 		$('input').prev('div').hide();
-	}
+	}*/
 	if(localStorage.logged_in) {
 		$(this).children().hide();
 		verify_user_logged_in();
@@ -129,7 +128,7 @@ $(document).on('click', '.job_result', function(){
 	if(save_scrollTop == myScroll.y) {
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
-		$(this).find('.description').slideToggle('fast');alert();
+		$(this).find('.description').slideToggle('fast');
 	}
 });
 
@@ -825,9 +824,9 @@ function get_user() {
 							$this.val(-$this.val());
 							$this.next('div').children('a').css('left', parseInt(-details[field_name]) + '%');
 						} else { // Input type 'text' 
-							if($this.val() != '') {
+							/*if($this.val() != '') {
 								$this.parent().prev('div').hide(); // Hide Placeholders if value is set...
-							}			
+							}*/			
 						}
 				    });
 				    
