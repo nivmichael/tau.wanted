@@ -225,7 +225,7 @@ $('.choose_button').on('click',function(e, data) {
 			$('#lnkDialog').click();
 			loading('hide');
 			return false;
-		}		
+		}
 		get_employment_sub_categories($(this).siblings('div').find('select').val(), '', 'multiple');
 		for (var x in checked_values) {
 			$(':checkbox[value=' + checked_values[x] + ']').click();
@@ -563,14 +563,14 @@ function get_employment_sub_categories(category, container, type) {
 	var parameters = {'category' : category, 'type' : type};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
-	req.open("POST", href_url, true);
+	req.open("POST", href_url, false);
 	req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	req.onreadystatechange = function() {
 		if (req.readyState == 4) {
 			if (req.status == 200 || req.status == 0) {
 				var data = JSON.parse(req.responseText);
 				if(type == 'multiple') {
-					if(data.success && data.success.length > 0) {						
+					if(data.success && data.success.length > 0) {
 						$('#choose_content').append('<fieldset data-role="controlgroup">' + data.success + '</fieldset>').trigger('create');
 					}
 				} else {
