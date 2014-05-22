@@ -54,6 +54,8 @@ function loaded() {
 		}
 	});
 	/////////////////////////////////////////////
+	
+	myScroll.refresh();
 }
 
 document.getElementById('jobs_feed').addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -127,7 +129,7 @@ $(document).on('click', '.job_result', function(){
 	if(save_scrollTop == myScroll.y) {
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
-		$(this).find('.description').slideToggle('fast');
+		$(this).find('.description').slideToggle('fast');alert();
 	}
 });
 
