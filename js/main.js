@@ -125,21 +125,26 @@ $('#jobs_container').on('touchstart', function(e){
 	//save_scrollTop = myScroll.y;
 });
 
-$(document).on('tap', '.job_result', function(){
-	//if(save_scrollTop == myScroll.y) {
-		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
-		job_title = $(this).find('div').next().html();
-		$(this).find('.description').slideToggle('fast');
-	//}
+$(document).on('click', '.job_result', function(){
+	job_title = $(this).find('div').next().html();
+	$(this).find('.description').slideToggle('fast');
 });
 
-$(document).on('click', '.job_result button', function() {
+function verify_apply(job_id) {
+	if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
+		apply_to_job(job_id, job_title, $('#' + job_id).closest('.job_result'));
+	} else {
+		return false;
+	}
+}
+
+/*$(document).on('click', '.job_result button', function() {
 	if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
 		apply_to_job(job_id, job_title, $(this).closest('.job_result'));
 	} else {
 		return false;
 	}
-});
+});*/
 
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
@@ -631,7 +636,8 @@ function validate_registration() {
 	loading('hide');
 	var approved = true;
 	$('#registration_form :input').each(function(){
-		if ($(this).val() == '' || $(this).val() == null || $(this).val() == undefined) {
+		if (($(this).val() == '' || $(this).val() == null || $(this).val() == undefined) &&
+		$(this).attr('id') != 'register_education_status' && $(this).attr('id') != 'register_family_status') {
 			$('#error_alert_content').html('כל השדות הינם שדות חובה');
 			$('#lnkDialog').click();
 			approved = false;
