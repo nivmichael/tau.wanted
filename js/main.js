@@ -6,10 +6,10 @@ var profile_loaded = false;
 var jobs_loaded = null;
 var faculty_corses_loaded = false;
 
-/* Pull Down to Refresh */
+/* Pull Down to Refresh *//*
 var myScroll, pullDownEl, pullDownOffset;
 
-function loaded() {
+function loaded()
 	pullDownEl = document.getElementById('test');
 	pullDownOffset = pullDownEl.offsetHeight;
 		
@@ -42,23 +42,24 @@ function loaded() {
 				pullDownEl.querySelector('#loading_text').innerHTML = 'מרענן משרות...';
 				$('.pullDownIcon').css('opacity', '0');
 				get_jobs(true);
+				myScroll.refresh();
 			}
 		}
 	});	
 	
-	/*////////////////////////////////////////////
+	////////////////////////////////////////////
 	$('input').not(':checkbox').each(function(){
 		if($(this).val() != '') {
 			$(this).parent().prev('div').hide();
 		}
 	});
-	////////////////////////////////////////////*/
+	////////////////////////////////////////////
 	
 	myScroll.refresh();
-}
+}*/
 
-document.getElementById('jobs_feed').addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+//document.getElementById('jobs_feed').addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+//document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
 
 // Login Page
 $('#Login_Page').on("pagebeforecreate", function() {
@@ -121,15 +122,15 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 var save_scrollTop = 0;
 
 $('#jobs_container').on('touchstart', function(e){
-	save_scrollTop = myScroll.y;
+	//save_scrollTop = myScroll.y;
 });
 
 $(document).on('tap', '.job_result', function(){
-	if(save_scrollTop == myScroll.y) {
+	//if(save_scrollTop == myScroll.y) {
 		job_id = $(this).find('div').last().html().replace('מספר משרה: ', '');
 		job_title = $(this).find('div').next().html();
 		$(this).find('.description').slideToggle('fast');
-	}
+	//}
 });
 
 $(document).on('click', '.job_result button', function() {
@@ -348,8 +349,12 @@ $('input').blur(function(){
 	}
 });
 */
-$('#build_profile button'). click(function(e) {
+$('#build_profile button').click(function(e) {
 	e.preventDefault();
+});
+
+$('#refresh_jobs').click(function(){
+	get_jobs(true);
 });
 
 /***************************************************/
@@ -748,7 +753,7 @@ function get_jobs(override) {
 					if(override) {
 						$('.incomplete').hide();
 						$('.job_result').remove();
-						$('.pullDownIcon').css('opacity', '1');
+						//$('.pullDownIcon').css('opacity', '1');
 					}
 					
 					$('#jobs_container').append(data.jobs).trigger('create');
@@ -756,7 +761,6 @@ function get_jobs(override) {
 					if(data.incomplete) {
 						$('.incomplete').show();
 					}
-					myScroll.refresh();
 				}
 				loading('hide');
 			}
