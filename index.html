@@ -45,10 +45,15 @@
 <body style="direction:rtl">
 	<script>
 		document.addEventListener('deviceready', function() {
+			  setTimeout(function() {
+		        navigator.splashscreen.hide();
+		    }, 5000);
+			 /*
 			  try {
 				  FB.init({ appId: "1401924913416178", nativeInterface: CDV.FB, useCachedDialogs: false });
 			  } catch (e) {
 			  }
+			  */
 		  }, false);
  		
  		function getLoginStatus() {
@@ -91,13 +96,13 @@
 		<div data-role="content" id="login_page">	
 			<form autocomplete="off" data-ajax="true" method="post" name="login_form" id="login_form">    
 				<div class="login_container">
-					<div class="input_placeholder">דוא"ל</div>
-					<input id="login_email" type="text" name="login_email" />	
+					<!--<div class="input_placeholder"></div>-->
+					<input placeholder='דוא"ל' id="login_email" type="text" name="login_email" />	
 				</div>
 				<div class="separator">&nbsp;</div>
 				<div class="login_container">
-					<div class="input_placeholder">סיסמה</div>
-					<input id="login_password" type="password" name="login_password" />
+					<!--<div class="input_placeholder">סיסמה</div>-->
+					<input placeholder="סיסמה" id="login_password" type="password" name="login_password" />
 				</div>				
 				<div class="error" id="login_error">הפרטים אינם נכונים, אנא נסו שנית</div>
 				<div class="submit_container">
@@ -105,8 +110,8 @@
 				</div>
 			</form>			
 			<button id="register" onclick="location.href='#registration_page'">משתמש חדש</button>
-			<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
-			<button id="fb_login" onclick="login();">כניסה עם Facebook</button>
+			<!--<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+			<button id="fb_login" onclick="login();">כניסה עם Facebook</button>-->
 		</div>
 	</div>
 	

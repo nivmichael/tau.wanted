@@ -1,12 +1,13 @@
 /* General */
 * {
 	direction:rtl !important;
-	
+	/*
 	-moz-user-select: -moz-none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	*/
 }
 
 input {
@@ -191,3 +192,6 @@ input {
 #self_eval h4 {
 	margin:0
 }
+
+/*Michael 22.5.2014*/
+#login_email, #login_password{color: #000000 !important;text-align: left !important;direction: ltr !important;}

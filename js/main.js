@@ -322,7 +322,7 @@ $('.logout').on('click', function(e) {
 		location.reload(1);
 	}, 2000);
 });
-
+/*
 $('.input_placeholder').click(function(){
 	$(this).next().children('input').focus();
 });
@@ -346,7 +346,7 @@ $('input').blur(function(){
 		clearIntercal(CheckFields);
 	}
 });
-
+*/
 $('#build_profile button'). click(function(e) {
 	e.preventDefault();
 });
