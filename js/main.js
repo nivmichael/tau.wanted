@@ -117,26 +117,32 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 			verify_user_logged_in();
 		}
 	}
+	
+	$( document ).on( "swipeleft", "#jobs_feed", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel" ).panel( "open" );
+			}
+		}
+	});
 });
 
+/*
 var save_scrollTop = 0;
 
 $('#jobs_container').on('touchstart', function(e){
 	//save_scrollTop = myScroll.y;
 });
+*/
 
 $(document).on('click', '.job_result', function(){
 	job_title = $(this).find('div').next().html();
 	$(this).find('.description').slideToggle('fast');
 });
 
-function verify_apply(job_id) {
-	if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
-		apply_to_job(job_id, job_title, $('#' + job_id).closest('.job_result'));
-	} else {
-		return false;
-	}
-}
+$('#refresh_jobs').click(function(){
+	get_jobs(true);
+});
 
 /*$(document).on('click', '.job_result button', function() {
 	if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
@@ -146,6 +152,7 @@ function verify_apply(job_id) {
 	}
 });*/
 
+/*
 // Profile Page
 $('#profile_page').on("pagebeforecreate", function() {
 	get_employment_categories();
@@ -178,7 +185,7 @@ $('#profile_page').on("pagebeforeshow", function() {
 		if(user_id == null) {
 			user_id = localStorage.logged_in.slice(0, localStorage.logged_in.indexOf('.'));
 			name = localStorage.logged_in.slice(localStorage.logged_in.lastIndexOf('.') + 1);
-			$('.header_normal h1').text("שלום, " + name);
+			$('.header_normal h1').html("שלום,<br />" + name);
 			get_user();
 			get_jobs();
 			profile_loaded = true;
@@ -186,99 +193,87 @@ $('#profile_page').on("pagebeforeshow", function() {
 			$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 			setTimeout(function(){
 				location.reload(1);
-			}, 2000);*/
+			}, 2000);*//*
 		} else {
 			get_user();
 			profile_loaded = true;
 		}
 	}
 });
+*/
 
-$('.add_container').click(function(e){
-	e.preventDefault();
-	$(this).hide();
-	$(this).prev('div').show();
-	$(this).prev('div').find('input, select').prop('disabled', false);
-});
-
-$('.remove_container').click(function(e){
-	e.preventDefault();
-	$(this).parent().siblings('.add_container').show();
-	$(this).parent().hide();
-	$(this).parent().find('input, select').prop('disabled', true);
-});
-
-$('.job_categories').change(function(){
-	var category = this.value;
-	if($(this).attr('id') == 'next_step_category') {
-		get_employment_sub_categories(category, $(this).attr('id'));
-	} else 
-	{
-		$(this).parent().parent().next('input').val('{}');
-	}
-});
-
-$('.choose_button').on('click',function(e, data) {
-	loading('show');
-	var $hidden_array = $(this).prev();
-	var hidden_array_id = $hidden_array.attr('id');
-	var checked_values = JSON.parse($hidden_array.val());
-	var type = $(this).text().replace("בחירת ", '');
-	$('#choose_content').html('');
-	if(type == 'משרות') {
-		if($(this).siblings('div').find('select>option:selected').text() == 'תחום ראשי') {
-			$('#error_alert_content').html('יש לבחור משרה');
-			$('#lnkDialog').click();
-			loading('hide');
-			return false;
-		}
-		get_employment_sub_categories($(this).siblings('div').find('select').val(), '', 'multiple');
-		for (var x in checked_values) {
-			$(':checkbox[value=' + checked_values[x] + ']').click();
-		}
-	} else {
-		if(checked_values.length == 0) {
-			$('#error_alert_content').html('יש לבחור פקולטה');
-			$('#lnkDialog').click();
-			loading('hide');
-			return false;
-		}
-		get_faculty_courses(checked_values);
-		for (var x in checked_values) {
-			for (var y in x) {	
-				$(':checkbox[value=' + x[y] + ']').click();
+// Panels
+$('#personal_details').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#personal_details", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_2" ).panel( "open" );
 			}
 		}
-	}	
-	$('#choose_dialog div h2').text($(this).text());
-	$('#lnkChooseDialog').click();
-	
-	$('#confirm_choise').one('click', function(){
-		checked_values = {};
-		if(type == 'משרות') {			
-			$(this).parent().prev().find(':checkbox').each(function(){
-				if($(this).prop('checked')) {
-					checked_values[$(this).siblings('label').text()] = $(this).val();
-				}			
-			});
-		} else {
-			var old_faculty = '';
-			$(this).parent().prev().find(':checkbox').each(function(){
-				var faculty = $(this).parent().parent().parent().prev('h3').text().replace(' ', '_');
-				if(faculty != old_faculty) {
-					checked_values[faculty] = {};
-					old_faculty = faculty;
-				}
-				if($(this).prop('checked')) {					
-					var course = $(this).siblings('label').text();
-					checked_values[faculty][course] = $(this).val();
-				}			
-			});
-		}
-		$('#'+hidden_array_id).val(JSON.stringify(checked_values));
 	});
 });
 
+$('#education').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#education", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_3" ).panel( "open" );
+			}
+		}
+	});
+});
+
+$('#employment').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#employment", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_4" ).panel( "open" );
+			}
+		}
+	});
+});
+
+/*$('#self_eval').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#self_eval", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_5" ).panel( "open" );
+			}
+		}
+	});
+});*/
+
+$('#additional_details').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#additional_details", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_6" ).panel( "open" );
+			}
+		}
+	});
+});
+
+$('#next_step').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#next_step", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_7" ).panel( "open" );
+			}
+		}
+	});
+});
+
+$('#build_profile').on("pagebeforeshow", function() {
+	$( document ).on( "swipeleft", "#build_profile", function( e ) {
+		if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+			if ( e.type === "swipeleft"  ) {
+				$( "#panel_8" ).panel( "open" );
+			}
+		}
+	});
+});
+
+/*
 $('#submit_profile').click(function(e){
 	loading('show');
 	e.preventDefault();
@@ -314,6 +309,7 @@ $('#submit_profile').click(function(e){
 	fields_object['self_eval'] = self_eval;
 	update_user(fields_object);
 });
+*/
 
 // Misc.
 $('.logout').on('click', function(e) {
@@ -358,8 +354,8 @@ $('#build_profile button').click(function(e) {
 	e.preventDefault();
 });
 
-$('#refresh_jobs').click(function(){
-	get_jobs(true);
+$('.right_pannel p a').click(function() {
+	get_user($(this).attr('href').replace('#', ''));
 });
 
 /***************************************************/
@@ -481,6 +477,14 @@ function get_job_description(job_id, $this) {
 	req.send("action=" + action + "&parameters=" + json_param);
 }
 
+function verify_apply(job_id) {
+	if(confirm('להגיש מועמדות למשרה: ' + job_title + '?')) {
+		apply_to_job(job_id, job_title, $('#' + job_id).closest('.job_result'));
+	} else {
+		return false;
+	}
+}
+
 function apply_to_job(job_id, job_title, $this) {
 	loading('show');
 	var action = 'apply_to_job';
@@ -509,9 +513,9 @@ function apply_to_job(job_id, job_title, $this) {
 	req.send("action=" + action + "&parameters=" + json_param);
 }
 
-function update_user(values) {
+function update_user(values, section) {
 	var action = 'update_user';
-	var parameters = {'user_id' : user_id, 'values' : values, 'hash': localStorage.logged_in};	
+	var parameters = {'user_id' : user_id, 'values' : values, 'hash': localStorage.logged_in, 'section': section};	
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
@@ -527,7 +531,7 @@ function update_user(values) {
 					last_name = values.last_name;
 					name = first_name + " " + last_name;
 					localStorage.logged_in = data.cookie.user + "." + name;
-					location.reload(1);
+					//location.reload(1);
 				}
 				else {
 					$('#error_alert_content').html(data.error);
@@ -696,7 +700,7 @@ function user_login() {
 					last_name = data.last_name;
 					name = first_name + " " + last_name;
 					localStorage.logged_in = data.cookie.user + "." + name;
-					$('.header_normal h1').text("שלום, " + name);
+					$('.header_normal h1').html("שלום,<br />" + name);
 					$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 					get_jobs(true);
 				}
@@ -724,7 +728,7 @@ function verify_user_logged_in() {
 				if(data.success) {
 					user_id = data.user_id;					
 					var name = localStorage.logged_in.split(".");
-					$('.header_normal h1').text("שלום, " + name[2]);
+					$('.header_normal h1').html("שלום,<br />" + name[2]);
 					$(':mobile-pagecontainer').pagecontainer('change',"#jobs_feed");
 					if(jobs_loaded == null) {
 						get_jobs();
@@ -775,10 +779,10 @@ function get_jobs(override) {
 	req.send("action=" + action + "&parameters=" + json_param);
 }
 
-function get_user() {
+function get_user(section) {
 	loading('show');	
 	var action = 'get_user';
-	var parameters = {'user_id' : user_id};
+	var parameters = {'user_id' : user_id, 'section' : section};
 	var json_param = JSON.stringify(parameters);
 	var req = new XMLHttpRequest(); 
 	req.open("POST", href_url, true);
@@ -789,6 +793,189 @@ function get_user() {
 				data = JSON.parse(req.responseText);
 				if(data.success) {
 					details = data.details;
+					
+					if($('#' + section).find('form').length == 0) {	
+						if (section == 'build_profile') {
+							$('#build_profile .ui-content').append(details).trigger('create');
+						} else {
+							$('#' + section).find('.ui-content').append(details).trigger( "create" );
+						}
+					}
+					
+					// Pick Jobs/Courses button
+					$('.choose_button').on('click',function(e, data) {
+						loading('show');
+						var $hidden_array = $(this).prev();
+						var hidden_array_id = $hidden_array.attr('id');
+						var checked_values = $hidden_array.val();
+						var type = $(this).text().replace("בחירת ", '');
+						$('#choose_content').html('');
+						if(type == 'משרות') {
+							if($(this).siblings('div').find('select>option:selected').text() == '') {
+								$('#error_alert_content').html('יש לבחור משרה');
+								$('#lnkDialog').click();
+								loading('hide');
+								return false;
+							}
+							
+							checked_values = JSON.parse(checked_values);
+
+							get_employment_sub_categories($(this).siblings('div').find('select').val(), '', 'multiple');
+							for (var x in checked_values) {
+								$(':checkbox[value=' + checked_values[x] + ']').click();
+							}
+						} else {
+							if(checked_values == '{}') {
+								$('#error_alert_content').html('יש לבחור פקולטה');
+								$('#lnkDialog').click();
+								loading('hide');
+								return false;
+							}
+							
+							checked_values = JSON.parse(checked_values);
+							get_faculty_courses(checked_values);
+							
+							for (var x in checked_values) {
+								for (var y in x) {	
+									$(':checkbox[value=' + x[y] + ']').click();
+								}
+							}
+						}	
+						$('#choose_dialog div h2').text($(this).text());
+						$('#lnkChooseDialog').click();
+						
+						$('#confirm_choise').one('click', function(){
+							checked_values = {};
+							if(type == 'משרות') {			
+								$(this).parent().prev().find(':checkbox').each(function(){
+									if($(this).prop('checked')) {
+										checked_values[$(this).siblings('label').text()] = $(this).val();
+									}			
+								});
+							} else {
+								var old_faculty = '';
+								$(this).parent().prev().find(':checkbox').each(function(){
+									var faculty = $(this).parent().parent().parent().prev('h3').text().replace(' ', '_');
+									if(faculty != old_faculty) {
+										checked_values[faculty] = {};
+										old_faculty = faculty;
+									}
+									if($(this).prop('checked')) {					
+										var course = $(this).siblings('label').text();
+										checked_values[faculty][course] = $(this).val();
+									}			
+								});
+							}
+							$('#'+hidden_array_id).val(JSON.stringify(checked_values));
+						});
+					});
+					
+					// Faculties checkboxes
+					$('#education input:checkbox').on('click', function() {
+						var $arr_values = $(this).parent().siblings(':hidden');
+						if($arr_values.val().length > 0) {	    
+						    var current_values = JSON.parse($arr_values.val());
+						    if ($(this).is(':checked')) {
+						    	current_values[$(this).attr('name')] = {};  
+						    } else {
+						    	delete current_values[$(this).attr('name')];
+						    }
+						    $arr_values.val(JSON.stringify(current_values));
+						}  
+					});
+					
+					// Iteration containers
+					$('.add_container').click(function(e){
+						e.preventDefault();
+						$(this).hide();
+						$(this).prev('div').show();
+						$(this).prev('div').find('input, select').prop('disabled', false);
+					});
+					
+					$('.remove_container').click(function(e){
+						e.preventDefault();
+						$(this).parent().siblings('.add_container').show();
+						$(this).parent().hide();
+						$(this).parent().find('input, select').prop('disabled', true);
+					});
+					
+					// Pick job category => get jobs
+					$('.job_categories').change(function(){
+						var category = this.value;
+						if($(this).attr('id') == 'next_step_category') {
+							get_employment_sub_categories(category, $(this).attr('id'));
+						} else 
+						{
+							$(this).parent().parent().next('input').val('{}');
+						}
+					});
+					
+					// Self Evaluation handler, only if set.
+					var current_vals = [];
+				    var new_val = 0;
+				    var total = 390 - parseInt($('#remaining_points span').html());
+				    $('.slider').each(function(){
+				    	current_vals[$(this).attr('id')] = parseInt($(this).val());
+				    });
+				    $('.slider').change(function(){
+				    	new_val = parseInt($(this).val());
+				    	if (total + new_val - current_vals[$(this).attr('id')] > 390) {
+				    		new_val -= (total + new_val - current_vals[$(this).attr('id')] - 390);
+				    		$(this).val(new_val);
+				    		$(this).next('div').children('a').css('left', new_val + '%');
+				    	}
+				    	if(new_val != current_vals[$(this).attr('id')]) {
+				    		$('#remaining_points span').html(parseInt($('#remaining_points span').html()) - parseInt(new_val - current_vals[$(this).attr('id')]));
+				    		total = 390 - parseInt($('#remaining_points span').html());
+				    		current_vals[$(this).attr('id')] = new_val;
+				    	}
+				    });
+				    
+				    // Submit Button
+				    $('.submit_profile').click(function(e){
+						loading('show');
+						e.preventDefault();
+						var form_fields = $(this).prev('form').serializeArray();
+						var fields_object = {};
+						
+						if($(this).closest('.ui-page').attr('id') == 'self_eval') {
+							var self_eval = [];
+							$.each(form_fields, function(i, field){
+								self_eval.push(-field.value);
+								delete fields_object[field.name];
+							});
+							self_eval = '{"fielda":"' + self_eval[0] +
+										'","fieldb":"' + self_eval[1] +
+										'","fieldc":"' + self_eval[2] +
+										'","fieldd":"' + self_eval[3] +
+										'","fielde":"' + self_eval[4] + 
+										'"}';
+							fields_object['self_eval'] = self_eval;
+						} else if($(this).closest('.ui-page').attr('id') == 'build_profile') {
+							fields_object['gallery'] = {};
+							$.each(form_fields, function(i, field){
+								delete fields_object[field.name];
+								fields_object['gallery'][i] = field.name;
+							});
+						} else {
+							$.each(form_fields, function(i, field){
+								fields_object[field.name] = field.value;
+								$this = $('#' + field.name);
+								if($this.is('select')) {
+									if($this.prop("selectedIndex") == 0) {
+										delete fields_object[field.name];
+									}
+								}  else if($('input[name=' + field.name + ']').is(':checkbox')) {
+									delete fields_object[field.name];
+								} else if((field.value == '{}' || field.value == '') && !$this.is(':password')) {
+									delete fields_object[field.name];
+								}
+							});
+						}
+						
+						update_user(fields_object, $(this).closest('.ui-page').attr('id'));
+					});
+					/*
 					for(var x in details) {
 						if (details[x]['iteration'] > 0) {
 							$('#' + x + " .add_container").click();
@@ -836,7 +1023,7 @@ function get_user() {
 						} else { // Input type 'text' 
 							/*if($this.val() != '') {
 								$this.parent().prev('div').hide(); // Hide Placeholders if value is set...
-							}*/			
+							}*/	   /*		
 						}
 				    });
 				    
@@ -852,26 +1039,7 @@ function get_user() {
 				    // Show existing gallery photos before Upload Form
 			    	$('#build_profile .ui-collapsible-content').prepend(details['gallery']).trigger('create');
 				    
-				    // Self Evaluation handler, only if set.
-					var current_vals = [];
-				    var new_val = 0;
-				    var total = 390 - parseInt($('#remaining_points span').html());
-				    $('.slider').each(function(){
-				    	current_vals[$(this).attr('id')] = parseInt($(this).val());
-				    });
-				    $('.slider').change(function(){
-				    	new_val = parseInt($(this).val());
-				    	if (total + new_val - current_vals[$(this).attr('id')] > 390) {
-				    		new_val -= (total + new_val - current_vals[$(this).attr('id')] - 390);
-				    		$(this).val(new_val);
-				    		$(this).next('div').children('a').css('left', new_val + '%');
-				    	}
-				    	if(new_val != current_vals[$(this).attr('id')]) {
-				    		$('#remaining_points span').html(parseInt($('#remaining_points span').html()) - parseInt(new_val - current_vals[$(this).attr('id')]));
-				    		total = 390 - parseInt($('#remaining_points span').html());
-				    		current_vals[$(this).attr('id')] = new_val;
-				    	}
-				    });
+				    */
 				}
 				loading('hide');
 			}	

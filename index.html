@@ -288,26 +288,182 @@
 	</div>
 	
 	<div data-role="page" id="jobs_feed">
+		<div class="right_pannel" data-role="panel" id="panel" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
 		<div class="header_normal" data-position="fixed" data-role="header">
 			<h1></h1>
 			<a href="#" class="logout">התנתק</a>
-			<a href="#profile_page" data-position="right"  data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true" ></a>
+			<a data-role="button" href="#panel" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
 		</div>
-		<div data-role="content" id="jobs_test" style="padding:0;/*overflow:hidden;position:absolute;top:0;*/width:100%;height:100%;">
-			<div id="jobs_container" style="padding:5px;">
-				<!--div id="test">
-					<div>
-						<span class="pullDownIcon"></span>
-						<span id="loading_text">משכו למטה לרענון משרות...</span>
-					</div>
-				</div-->
-				<div>
-					<button id="refresh_jobs">רענון משרות</button>
-				</div>
-				<div class="incomplete">שימו לב: כדי לראות את התוצאות המתאימות ביותר, יש להשלים את הפרופיל</div>
+		<div data-role="content" id="jobs_container" style="padding:5px">
+			<div>
+				<button id="refresh_jobs">רענון משרות</button>
 			</div>
+			<div class="incomplete">שימו לב: כדי לראות את התוצאות המתאימות ביותר, יש להשלים את הפרופיל</div>
+		</div>	
+	</div>
+	
+	<div data-role="page" id="personal_details">
+		<div class="right_pannel" data-role="panel" id="panel_2" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_2" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>פרטיים אישיים</h3>
 		</div>		
 	</div>
+	
+	<div data-role="page" id="education">
+		<div class="right_pannel" data-role="panel" id="panel_3" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_3" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>השכלה</h3>
+		</div>		
+	</div>
+	
+	<div data-role="page" id="employment">
+		<div class="right_pannel" data-role="panel" id="panel_4" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_4" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>ניסיון תעסוקתי</h3>
+		</div>		
+	</div>
+	
+	<div data-role="page" id="self_eval">
+		<div class="right_pannel" data-role="panel" id="panel_5" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_5" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>הערכה עצמית</h3>
+		</div>		
+	</div>
+	
+	<div data-role="page" id="additional_details">
+		<div class="right_pannel" data-role="panel" id="panel_6" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_6" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>פרטים נוספים</h3>
+		</div>		
+	</div>
+	
+	<div data-role="page" id="next_step">
+		<div class="right_pannel" data-role="panel" id="panel_7" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#build_profile">גלריית תמונות</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_7" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>ציפיות תפקיד</h3>
+		</div>		
+	</div>
+	
+	<div data-role="page" id="build_profile">
+		<div class="right_pannel" data-role="panel" id="panel_8" data-display="push" data-position="right" data-theme="c">
+		    <p><a data-role="button" href="#personal_details">פרטים אישיים</a></p>
+		    <p><a data-role="button" href="#education">השכלה</a></p>
+		    <p><a data-role="button" href="#employment">ניסיון תעסוקתי</a></p>
+		    <p><a data-role="button" href="#self_eval">הערכה עצמית</a></p>
+		    <p><a data-role="button" href="#additional_details">פרטים נוספים</a></p>
+		    <p><a data-role="button" href="#next_step">ציפיות תפקיד</a></p>
+		    <p><a data-role="button" href="#jobs_feed">חיפוש משרות</a></p>
+		    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="left">סגור</a>
+		</div>
+		<div class="header_normal" data-position="fixed" data-role="header">
+			<h1></h1>
+			<a href="#" class="logout">התנתק</a>
+			<a data-role="button" href="#panel_8" data-position="right" data-icon="bars" data-iconpos="notext" data-shadow="true" data-iconshadow="true">Open right panel</a>
+		</div>
+		<div data-role="content">
+			<h3>גלריית תמונות</h3>
+			<fieldset data-role="controlgroup" id="buttons_fieldset">
+				<a data-role="button" onclick="takePicture();">צילום תמונה</a>
+				<a data-role="button" onclick="selectPicture();">בחירת תמונה מגלרייה</a>
+			</fieldset>
+			<img style="width:120px;visibility:hidden;display:none;padding-top:20px;margin:auto;display:block" id="camera_image" src="" />
+			<a data-role="button" onclick="uploadPicture();">העלאת תמונה</a>
+		</div>		
+	</div>
+	
 	
 	<div data-role="page" id="profile_page">
 		<div class="header_normal" data-role="header">
@@ -318,7 +474,7 @@
 		<form autocomplete="off" data-ajax="true" method="post" name="profile_form" id="profile_form">
 		<div data-role="content" id="profile_container">
 			<div data-role="collapsible-set" id="main_container">
-				<div data-role="collapsible">
+				<div data-role="collapsible" id="personal_details">
 					<h3>פרטיים אישיים</h3>
 					<div class="profile_container">
 						<input placeholder="שם פרטי" id="first_name" type="text" name="first_name" />	
@@ -344,7 +500,7 @@
 						<option value="נקבה">נקבה</option>
 					</select>
 					<fieldset id="profile_date_of_birth" data-type="horizontal" data-role="controlgroup">					
-						 <select name="general_birth_day" id="general_birth_day">
+						<select name="general_birth_day" id="general_birth_day">
 						 	<option>יום</option>
 				            <option value="1">01</option>
 				            <option value="2">02</option>
@@ -734,7 +890,7 @@
 				    </fieldset>
 				    <!--a href="#" class="remove_container">מחיקה</a>&nbsp;&nbsp;
 				    <a href="#" class="move_container_up">למעלה</a>&nbsp;&nbsp;
-				    <a href="#" class="move_container_down">למטה</a>&nbsp;&nbsp;-->
+				    <a href="#" class="move_container_down">למטה</a>&nbsp;&nbsp;--><!--
 				    </div>
 				    <div id="education_1_container" class="iteration_container">
 					<fieldset data-role="controlgroup">
@@ -1418,7 +1574,7 @@
 				</div>
 				<div data-role="collapsible" id="self_eval">
 					<h3>הערכה עצמית</h3>
-					<div id="remaining_points" style="color: red; text-align: center">לרשותך ( <span style="font-weight:bold">390</span> ) נקודות לחלוקה</div>
+					<!--div id="remaining_points" style="color: red; text-align: center">לרשותך ( <span style="font-weight:bold">390</span> ) נקודות לחלוקה</div>
 					<h4>יושרה</h4>
 					<input type="range" class="slider" step="5" name="self_eval_fielda" id="self_eval_fielda" value="70" min="0" max="100" />
 					<h4>יצירתיות</h4>
@@ -1428,9 +1584,9 @@
 					<h4>תקשורת בינאישית וחוש הומור</h4>
 					<input type="range" class="slider" step="5" name="self_eval_fieldd" id="self_eval_fieldd" value="70" min="0" max="100" />
 					<h4>דבקות במטרה</h4>
-					<input type="range" class="slider" step="5" name="self_eval_fielde" id="self_eval_fielde" value="70" min="0" max="100" />
+					<input type="range" class="slider" step="5" name="self_eval_fielde" id="self_eval_fielde" value="70" min="0" max="100" /--><!--
 				</div>
-				<div data-role="collapsible">
+				<div data-role="collapsible" id="additional_details">
 					<h3>פרטים נוספים</h3>
 					<h2>שפות:</h2>
 					<div id ="languages">
@@ -1772,7 +1928,7 @@
 						<input placeholder="פרטים נוספים" id="army_comments" type="text" name="army_comments" />	
 					</div>
 				</div>
-				<div data-role="collapsible">
+				<div data-role="collapsible" id="next_step">
 					<h3>צעד הבא</h3>
 					<select class="job_categories" name="next_step_category" id="next_step_category">
 						<option>תחום ראשי</option>						
@@ -1944,7 +2100,7 @@
                         <option value="שלושה חודשים">שלושה חודשים</option> 
 					</select>
 				</div>
-				<div id="build_profile" style="text-align: center" data-role="collapsible" data-collapsed="false">
+				<div id="build_profile1" style="text-align: center" data-role="collapsible" data-collapsed="false">
 					<h3>בניית פרופיל</h3>
 					<fieldset data-role="controlgroup" id="buttons_fieldset">
 						<a data-role="button" onclick="takePicture();">צילום תמונה</a>
@@ -1958,6 +2114,7 @@
 		</div>
 		</form>
 	</div>
+	-->
 	
 	<script src="js/jquery-2.0.2.min.js"></script>
 	<script src="js/jquery.mobile-1.4.1.min.js"></script>
