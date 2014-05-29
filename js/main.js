@@ -796,9 +796,11 @@ function get_user(section) {
 					
 					if($('#' + section).find('form').length == 0) {	
 						if (section == 'build_profile') {
-							$('#build_profile .ui-content').append(details).trigger('create');
+							$('#build_profile .ui-content').append('<form autocomplete="off" data-ajax="true" method="post" class="profile_form">' +
+								details + '</form><button class="submit_profile">שמירה</button>').trigger('create');
 						} else {
-							$('#' + section).find('.ui-content').append(details).trigger( "create" );
+							$('#' + section).find('.ui-content').append('<form autocomplete="off" data-ajax="true" method="post" class="profile_form">' +
+								details + '</form><button class="submit_profile">שמירה</button>').trigger( "create" );
 						}
 					}
 					
