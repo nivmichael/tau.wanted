@@ -111,7 +111,7 @@ $('#jobs_feed').on("pagebeforeshow", function() {
 	if(!localStorage.logged_in) {
 		$(this).hide();
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
-		location.reload(1);
+		//location.reload(1);
 	} else {
 		if(user_id == null) {
 			verify_user_logged_in();
@@ -322,8 +322,8 @@ $('.logout').on('click', function(e) {
 			//logout();
 		//}
 		$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
-		location.reload(1);
-	}, 2000);
+		//location.reload(1);
+	}, 1500);
 });
 /*
 $('.input_placeholder').click(function(){
@@ -739,7 +739,7 @@ function verify_user_logged_in() {
 				} else {
 					$(':mobile-pagecontainer').pagecontainer('change',"#Login_Page");
 					localStorage.clear();
-					location.reload(1);
+					//location.reload(1);
 				}
 			}
 		}
@@ -794,7 +794,7 @@ function get_user(section) {
 				if(data.success) {
 					details = data.details;
 					
-					if($('#' + section).find('form').length == 0) {	
+					if($('#' + section).find('form').length == 0) {
 						if (section == 'build_profile') {
 							$('#build_profile .ui-content').append('<form autocomplete="off" data-ajax="true" method="post" class="profile_form">' +
 								details + '</form><button class="submit_profile">שמירה</button>').trigger('create');
@@ -802,181 +802,181 @@ function get_user(section) {
 							$('#' + section).find('.ui-content').append('<form autocomplete="off" data-ajax="true" method="post" class="profile_form">' +
 								details + '</form><button class="submit_profile">שמירה</button>').trigger( "create" );
 						}
-					}
 					
-					// Pick Jobs/Courses button
-					$('.choose_button').on('click',function(e, data) {
-						loading('show');
-						var $hidden_array = $(this).prev();
-						var hidden_array_id = $hidden_array.attr('id');
-						var checked_values = $hidden_array.val();
-						var type = $(this).text().replace("בחירת ", '');
-						$('#choose_content').html('');
-						if(type == 'משרות') {
-							if($(this).siblings('div').find('select>option:selected').text() == '') {
-								$('#error_alert_content').html('יש לבחור משרה');
-								$('#lnkDialog').click();
-								loading('hide');
-								return false;
-							}
-							
-							checked_values = JSON.parse(checked_values);
-
-							get_employment_sub_categories($(this).siblings('div').find('select').val(), '', 'multiple');
-							for (var x in checked_values) {
-								$(':checkbox[value=' + checked_values[x] + ']').click();
-							}
-						} else {
-							if(checked_values == '{}') {
-								$('#error_alert_content').html('יש לבחור פקולטה');
-								$('#lnkDialog').click();
-								loading('hide');
-								return false;
-							}
-							
-							checked_values = JSON.parse(checked_values);
-							get_faculty_courses(checked_values);
-							
-							for (var x in checked_values) {
-								for (var y in x) {	
-									$(':checkbox[value=' + x[y] + ']').click();
+						// Pick Jobs/Courses button
+						$('.choose_button').on('click',function(e, data) {
+							loading('show');
+							var $hidden_array = $(this).prev();
+							var hidden_array_id = $hidden_array.attr('id');
+							var checked_values = $hidden_array.val();
+							var type = $(this).text().replace("בחירת ", '');
+							$('#choose_content').html('');
+							if(type == 'משרות') {
+								if($(this).siblings('div').find('select>option:selected').text() == '') {
+									$('#error_alert_content').html('יש לבחור משרה');
+									$('#lnkDialog').click();
+									loading('hide');
+									return false;
 								}
-							}
-						}	
-						$('#choose_dialog div h2').text($(this).text());
-						$('#lnkChooseDialog').click();
+								
+								checked_values = JSON.parse(checked_values);
+	
+								get_employment_sub_categories($(this).siblings('div').find('select').val(), '', 'multiple');
+								for (var x in checked_values) {
+									$(':checkbox[value=' + checked_values[x] + ']').click();
+								}
+							} else {
+								if(checked_values == '{}') {
+									$('#error_alert_content').html('יש לבחור פקולטה');
+									$('#lnkDialog').click();
+									loading('hide');
+									return false;
+								}
+								
+								checked_values = JSON.parse(checked_values);
+								get_faculty_courses(checked_values);
+								
+								for (var x in checked_values) {
+									for (var y in x) {	
+										$(':checkbox[value=' + x[y] + ']').click();
+									}
+								}
+							}	
+							$('#choose_dialog div h2').text($(this).text());
+							$('#lnkChooseDialog').click();
+							
+							$('#confirm_choise').one('click', function(){
+								checked_values = {};
+								if(type == 'משרות') {			
+									$(this).parent().prev().find(':checkbox').each(function(){
+										if($(this).prop('checked')) {
+											checked_values[$(this).siblings('label').text()] = $(this).val();
+										}			
+									});
+								} else {
+									var old_faculty = '';
+									$(this).parent().prev().find(':checkbox').each(function(){
+										var faculty = $(this).parent().parent().parent().prev('h3').text().replace(' ', '_');
+										if(faculty != old_faculty) {
+											checked_values[faculty] = {};
+											old_faculty = faculty;
+										}
+										if($(this).prop('checked')) {					
+											var course = $(this).siblings('label').text();
+											checked_values[faculty][course] = $(this).val();
+										}			
+									});
+								}
+								$('#'+hidden_array_id).val(JSON.stringify(checked_values));
+							});
+						});
 						
-						$('#confirm_choise').one('click', function(){
-							checked_values = {};
-							if(type == 'משרות') {			
-								$(this).parent().prev().find(':checkbox').each(function(){
-									if($(this).prop('checked')) {
-										checked_values[$(this).siblings('label').text()] = $(this).val();
-									}			
+						// Faculties checkboxes
+						$('#education input:checkbox').on('click', function() {
+							var $arr_values = $(this).parent().siblings(':hidden');
+							if($arr_values.val().length > 0) {	    
+							    var current_values = JSON.parse($arr_values.val());
+							    if ($(this).is(':checked')) {
+							    	current_values[$(this).attr('name')] = {};  
+							    } else {
+							    	delete current_values[$(this).attr('name')];
+							    }
+							    $arr_values.val(JSON.stringify(current_values));
+							}  
+						});
+						
+						// Iteration containers
+						$('.add_container').click(function(e){
+							e.preventDefault();
+							$(this).hide();
+							$(this).prev('div').show();
+							$(this).prev('div').find('input, select').prop('disabled', false);
+						});
+						
+						$('.remove_container').click(function(e){
+							e.preventDefault();
+							$(this).parent().siblings('.add_container').show();
+							$(this).parent().hide();
+							$(this).parent().find('input, select').prop('disabled', true);
+						});
+						
+						// Pick job category => get jobs
+						$('.job_categories').change(function(){
+							var category = this.value;
+							if($(this).attr('id') == 'next_step_category') {
+								get_employment_sub_categories(category, $(this).attr('id'));
+							} else 
+							{
+								$(this).parent().parent().next('input').val('{}');
+							}
+						});
+						
+						// Self Evaluation handler, only if set.
+						var current_vals = [];
+					    var new_val = 0;
+					    var total = 390 - parseInt($('#remaining_points span').html());
+					    $('.slider').each(function(){
+					    	current_vals[$(this).attr('id')] = parseInt($(this).val());
+					    });
+					    $('.slider').change(function(){
+					    	new_val = parseInt($(this).val());
+					    	if (total + new_val - current_vals[$(this).attr('id')] > 390) {
+					    		new_val -= (total + new_val - current_vals[$(this).attr('id')] - 390);
+					    		$(this).val(new_val);
+					    		$(this).next('div').children('a').css('left', new_val + '%');
+					    	}
+					    	if(new_val != current_vals[$(this).attr('id')]) {
+					    		$('#remaining_points span').html(parseInt($('#remaining_points span').html()) - parseInt(new_val - current_vals[$(this).attr('id')]));
+					    		total = 390 - parseInt($('#remaining_points span').html());
+					    		current_vals[$(this).attr('id')] = new_val;
+					    	}
+					    });
+					    
+					    // Submit Button
+					    $('#' + section + ' .submit_profile').on('click', function(e){
+							loading('show');
+							e.preventDefault();
+							var form_fields = $(this).prev('form').serializeArray();
+							var fields_object = {};
+							
+							if($(this).closest('.ui-page').attr('id') == 'self_eval') {
+								var self_eval = [];
+								$.each(form_fields, function(i, field){
+									self_eval.push(-field.value);
+									delete fields_object[field.name];
+								});
+								self_eval = '{"fielda":"' + self_eval[0] +
+											'","fieldb":"' + self_eval[1] +
+											'","fieldc":"' + self_eval[2] +
+											'","fieldd":"' + self_eval[3] +
+											'","fielde":"' + self_eval[4] + 
+											'"}';
+								fields_object['self_eval'] = self_eval;
+							} else if($(this).closest('.ui-page').attr('id') == 'build_profile') {
+								fields_object['gallery'] = {};
+								$.each(form_fields, function(i, field){
+									delete fields_object[field.name];
+									fields_object['gallery'][i] = field.name;
 								});
 							} else {
-								var old_faculty = '';
-								$(this).parent().prev().find(':checkbox').each(function(){
-									var faculty = $(this).parent().parent().parent().prev('h3').text().replace(' ', '_');
-									if(faculty != old_faculty) {
-										checked_values[faculty] = {};
-										old_faculty = faculty;
-									}
-									if($(this).prop('checked')) {					
-										var course = $(this).siblings('label').text();
-										checked_values[faculty][course] = $(this).val();
-									}			
-								});
-							}
-							$('#'+hidden_array_id).val(JSON.stringify(checked_values));
-						});
-					});
-					
-					// Faculties checkboxes
-					$('#education input:checkbox').on('click', function() {
-						var $arr_values = $(this).parent().siblings(':hidden');
-						if($arr_values.val().length > 0) {	    
-						    var current_values = JSON.parse($arr_values.val());
-						    if ($(this).is(':checked')) {
-						    	current_values[$(this).attr('name')] = {};  
-						    } else {
-						    	delete current_values[$(this).attr('name')];
-						    }
-						    $arr_values.val(JSON.stringify(current_values));
-						}  
-					});
-					
-					// Iteration containers
-					$('.add_container').click(function(e){
-						e.preventDefault();
-						$(this).hide();
-						$(this).prev('div').show();
-						$(this).prev('div').find('input, select').prop('disabled', false);
-					});
-					
-					$('.remove_container').click(function(e){
-						e.preventDefault();
-						$(this).parent().siblings('.add_container').show();
-						$(this).parent().hide();
-						$(this).parent().find('input, select').prop('disabled', true);
-					});
-					
-					// Pick job category => get jobs
-					$('.job_categories').change(function(){
-						var category = this.value;
-						if($(this).attr('id') == 'next_step_category') {
-							get_employment_sub_categories(category, $(this).attr('id'));
-						} else 
-						{
-							$(this).parent().parent().next('input').val('{}');
-						}
-					});
-					
-					// Self Evaluation handler, only if set.
-					var current_vals = [];
-				    var new_val = 0;
-				    var total = 390 - parseInt($('#remaining_points span').html());
-				    $('.slider').each(function(){
-				    	current_vals[$(this).attr('id')] = parseInt($(this).val());
-				    });
-				    $('.slider').change(function(){
-				    	new_val = parseInt($(this).val());
-				    	if (total + new_val - current_vals[$(this).attr('id')] > 390) {
-				    		new_val -= (total + new_val - current_vals[$(this).attr('id')] - 390);
-				    		$(this).val(new_val);
-				    		$(this).next('div').children('a').css('left', new_val + '%');
-				    	}
-				    	if(new_val != current_vals[$(this).attr('id')]) {
-				    		$('#remaining_points span').html(parseInt($('#remaining_points span').html()) - parseInt(new_val - current_vals[$(this).attr('id')]));
-				    		total = 390 - parseInt($('#remaining_points span').html());
-				    		current_vals[$(this).attr('id')] = new_val;
-				    	}
-				    });
-				    
-				    // Submit Button
-				    $('.submit_profile').click(function(e){
-						loading('show');
-						e.preventDefault();
-						var form_fields = $(this).prev('form').serializeArray();
-						var fields_object = {};
-						
-						if($(this).closest('.ui-page').attr('id') == 'self_eval') {
-							var self_eval = [];
-							$.each(form_fields, function(i, field){
-								self_eval.push(-field.value);
-								delete fields_object[field.name];
-							});
-							self_eval = '{"fielda":"' + self_eval[0] +
-										'","fieldb":"' + self_eval[1] +
-										'","fieldc":"' + self_eval[2] +
-										'","fieldd":"' + self_eval[3] +
-										'","fielde":"' + self_eval[4] + 
-										'"}';
-							fields_object['self_eval'] = self_eval;
-						} else if($(this).closest('.ui-page').attr('id') == 'build_profile') {
-							fields_object['gallery'] = {};
-							$.each(form_fields, function(i, field){
-								delete fields_object[field.name];
-								fields_object['gallery'][i] = field.name;
-							});
-						} else {
-							$.each(form_fields, function(i, field){
-								fields_object[field.name] = field.value;
-								$this = $('#' + field.name);
-								if($this.is('select')) {
-									if($this.prop("selectedIndex") == 0) {
+								$.each(form_fields, function(i, field){
+									fields_object[field.name] = field.value;
+									$this = $('#' + field.name);
+									if($this.is('select')) {
+										if($this.prop("selectedIndex") == 0) {
+											delete fields_object[field.name];
+										}
+									}  else if($('input[name=' + field.name + ']').is(':checkbox')) {
+										delete fields_object[field.name];
+									} else if((field.value == '{}' || field.value == '') && !$this.is(':password')) {
 										delete fields_object[field.name];
 									}
-								}  else if($('input[name=' + field.name + ']').is(':checkbox')) {
-									delete fields_object[field.name];
-								} else if((field.value == '{}' || field.value == '') && !$this.is(':password')) {
-									delete fields_object[field.name];
-								}
-							});
-						}
-						
-						update_user(fields_object, $(this).closest('.ui-page').attr('id'));
-					});
+								});
+							}
+							
+							update_user(fields_object, $(this).closest('.ui-page').attr('id'));
+						});
+					}
 					/*
 					for(var x in details) {
 						if (details[x]['iteration'] > 0) {
