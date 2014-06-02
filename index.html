@@ -45,16 +45,13 @@
 <body style="direction:rtl">
 	<script>
 		document.addEventListener('deviceready', function() {
-			  setTimeout(function() {
-			  	alert("123");
-		        //navigator.splashscreen.hide();
-		    }, 10000);
-			 /*
-			  try {
-				  FB.init({ appId: "1401924913416178", nativeInterface: CDV.FB, useCachedDialogs: false });
-			  } catch (e) {
-			  }
-			  */
+			navigator.splashscreen.hide();
+			/*
+			try {
+				FB.init({ appId: "1401924913416178", nativeInterface: CDV.FB, useCachedDialogs: false });
+			} catch (e) {
+			}
+			*/
 		  }, false);
  		
  		function getLoginStatus() {
