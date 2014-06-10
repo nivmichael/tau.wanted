@@ -526,11 +526,14 @@ function update_user(values, section) {
 				var data = JSON.parse(req.responseText);
 				if(data.success) {
 					alert("הפרטים עודכנו בהצלחה.");
-					user_id = data.user_id;					
-					first_name = values.first_name;
-					last_name = values.last_name;
-					name = first_name + " " + last_name;
-					localStorage.logged_in = data.cookie.user + "." + name;
+					user_id = data.user_id;
+					
+					if(section == 'personal_details') {					
+						first_name = values.first_name;
+						last_name = values.last_name;
+						name = first_name + " " + last_name;
+						localStorage.logged_in = data.cookie.user + "." + name;
+					}
 					//location.reload(1);
 				}
 				else {
@@ -795,13 +798,13 @@ function get_user(section) {
 					details = data.details;
 					
 					if($('#' + section).find('form').length == 0) {
-						if (section == 'build_profile') {
+						/*if (section == 'build_profile') {
 							$('#build_profile .ui-content').append('<form autocomplete="off" data-ajax="true" method="post" class="profile_form">' +
 								details + '</form><button class="submit_profile">שמירה</button>').trigger('create');
-						} else {
+						} else {*/
 							$('#' + section).find('.ui-content').append('<form autocomplete="off" data-ajax="true" method="post" class="profile_form">' +
 								details + '</form><button class="submit_profile">שמירה</button>').trigger( "create" );
-						}
+						//}
 					
 						// Pick Jobs/Courses button
 						$('.choose_button').on('click',function(e, data) {
