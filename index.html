@@ -44,7 +44,6 @@
 </head>
 <body style="direction:rtl">
 	<script>
-	setTimeout(function(){
 		document.addEventListener('deviceready', function() {
 			navigator.splashscreen.hide();
 			/*
@@ -53,8 +52,7 @@
 			} catch (e) {
 			}
 			*/
-		  }, false);
-		  }, 5000);
+			});
  		
  		function getLoginStatus() {
             FB.getLoginStatus(function(response) {
